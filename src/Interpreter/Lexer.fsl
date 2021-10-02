@@ -15,7 +15,7 @@ let lexeme x =
 let whitespace = [' ' '\t' ]
 let newline = ('\n' | '\r' '\n')
 
-let smb = ['a'-'z' 'A'-'Z' '0'-'9' '-' '.' '/' '+' '*' '~' ';']
+let smb = ['a'-'z' 'A'-'Z' '0'-'9' '-' '.' '/' '+' '~' ';']
 
 let str = '"' smb* '"'
 let vname = '[' ['a'-'z' 'A'-'Z']+ ['0'-'9']* ']'
