@@ -1,3 +1,7 @@
+%{
+
+%}
+
 // The start token becomes a parser function in the compiled code:
 %start start
 
