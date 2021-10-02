@@ -1,0 +1,16 @@
+let [q] = (x|a)
+let [z] = [q]*a
+let [z1] = (x|y)*a
+
+let [findRes] = findAll "xyy" [q]
+
+
+let [acc] = isAcceptable "yyxa" [z]
+
+let [x] = isAcceptable "yyyxa" (x?y*x?a)
+
+let [last] = (x?y*x?a)
+
+printToDot [last] "/home/ivan/Desktop/test.dot"
+
+print [x]

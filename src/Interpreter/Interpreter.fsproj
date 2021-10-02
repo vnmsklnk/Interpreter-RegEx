@@ -1,11 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Library.fs" />
-  </ItemGroup>
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+        <RootNamespace>Interpreter</RootNamespace>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <Title>Interpreter</Title>
+        <Description>Interpreter</Description>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)'=='Release'">
+        <Optimize>true</Optimize>
+        <Tailcalls>true</Tailcalls>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="AST.fs" />
+        <FsYacc Include="Parser.fsy">
+            <OtherFlags>--module Parser</OtherFlags>
+        </FsYacc>
+
+        <FsLex Include="Lexer.fsl">
+            <OtherFlags>--module Lexer --unicode</OtherFlags>
+        </FsLex>
+        
+        <Compile Include="Parser.fs" />
+        <Compile Include="Lexer.fs" />
+
+        <Compile Include="FiniteAutomata.fs" />
+        <Compile Include="Automata.fs" />
+        <Compile Include="Interpreter.fs" />
+        <Compile Include="RegexpParser.fs" />
+        <Compile Include="AstToDot.fs" />
+        <Content Include="data\regex_test.txt" />
+        <Content Include="data\AstToDot.txt" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Argu" Version="6.1.1" />
+        <PackageReference Include="FsLexYacc" Version="10.2.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\quadtrees\src\MatrixLib\MatrixLib.fsproj" />
+    </ItemGroup>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

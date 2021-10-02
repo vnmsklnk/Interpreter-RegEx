@@ -1,0 +1,17 @@
+digraph nfa
+{
+rankdir = LR
+node [shape = circle];
+2[shape = circle, label = "2_Start"]
+6[shape = circle, label = "6_Start"]
+10[shape = circle, label = "10_Start"]
+14[shape = circle, label = "14_Start"]
+0[shape = doublecircle]
+1[shape = doublecircle]
+4[shape = doublecircle]
+5[shape = doublecircle]
+8[shape = doublecircle]
+9[shape = doublecircle]
+12[shape = doublecircle]
+13[shape = doublecircle]
+}

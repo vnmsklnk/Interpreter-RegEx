@@ -4,13 +4,11 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Interpreter\Interpreter.fsproj">
-      <Name>Interpreter.fsproj</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\..\src\Interpreter\Interpreter.fsproj" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Tests.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Main.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
