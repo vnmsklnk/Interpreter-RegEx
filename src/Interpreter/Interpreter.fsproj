@@ -43,8 +43,9 @@
         <PackageReference Include="FsLexYacc" Version="10.2.0" />
     </ItemGroup>
 
-    <ItemGroup>
-<!--      <ProjectReference Include="..\..\quadtrees\src\MatrixLib\MatrixLib.fsproj" />-->
+    <ItemGroup><!--      <ProjectReference Include="..\..\quadtrees\src\MatrixLib\MatrixLib.fsproj" />-->
+    
+      <ProjectReference Include="..\MatrixLib\MatrixLib.fsproj" />
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

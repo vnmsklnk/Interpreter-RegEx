@@ -4,7 +4,7 @@ open System.Collections.Generic
 open MatrixLib.SparseMatrixQT
 open MatrixLib.AlgebraicStructures
 open FiniteAutomata
-open PointRegionQuadtree.MutableQT
+open Quadtrees.MutableQT
 
 [<Struct>]
 type MatrixNFA<'t> =
