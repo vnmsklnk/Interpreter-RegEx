@@ -44,7 +44,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\quadtrees\src\MatrixLib\MatrixLib.fsproj" />
+<!--      <ProjectReference Include="..\..\quadtrees\src\MatrixLib\MatrixLib.fsproj" />-->
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
