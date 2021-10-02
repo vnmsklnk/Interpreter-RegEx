@@ -38,13 +38,13 @@
         <Content Include="data\AstToDot.txt" />
     </ItemGroup>
 
-    <ItemGroup>
-        <PackageReference Include="Argu" Version="6.1.1" />
-        <PackageReference Include="FsLexYacc" Version="10.2.0" />
-    </ItemGroup>
+<!--    <ItemGroup>-->
+<!--        <PackageReference Include="FsLexYacc" Version="10.2.0" />-->
+<!--    </ItemGroup>-->
 
     <ItemGroup>
       <ProjectReference Include="..\MatrixLib\MatrixLib.fsproj" />
     </ItemGroup>
-<!--    <Import Project="..\..\.paket\Paket.Restore.targets" />-->
+    
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

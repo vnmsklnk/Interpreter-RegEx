@@ -9,6 +9,7 @@ nuget FsCheck 2.16.0 // 2.14.0 for net 3.1
 nuget Expecto.FsCheck
 nuget System.Runtime.Numerics
 nuget FsLexYacc 10.2.0
+nuget FsLexYacc.Runtime 10.2.0
 nuget Argu 6.1.1
 
 group Docs
