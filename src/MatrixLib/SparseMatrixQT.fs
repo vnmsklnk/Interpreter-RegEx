@@ -94,8 +94,6 @@ type SparseMatrixQT<'a when 'a: equality> =
             // (point and value will be replaced if already exist)
             MutableQT.set (i, j) value this.quadtree |> ignore
 
-// todo: implement operators equality, getZero
-// todo: use in map, mapi
 [<Struct>]
 type Operators<'a> =
     { IsEqual: 'a -> 'a -> bool

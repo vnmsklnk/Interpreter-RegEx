@@ -127,7 +127,6 @@ let epsClosure (atm: MatrixNFA<_>) =
     let intermediateResult =
         MatrixNFA<_>(atm.Start, atm.Final, epsCls)
 
-    // toDot intermediateResult "eps-closure-step-1.dot"
     let newFinals = HashSet<_>()
 
     epsCls.quadtree
@@ -143,8 +142,6 @@ let epsClosure (atm: MatrixNFA<_>) =
 
     let res =
         MatrixNFA<_>(atm.Start, newFinals, epsCls)
-
-    // toDot res "eps-closure-without-eps-edges.dot"
 
     let boolMtx =
         res.Transitions
@@ -188,8 +185,6 @@ let epsClosure (atm: MatrixNFA<_>) =
             newTransitions
         )
         
-    // save to result of closure (should a DFA) .dot file
-    // toDot res "eps-closure-final-result.dot"
     res
 
 
@@ -216,9 +211,6 @@ let accept (nfa: MatrixNFA<_>) (input: list<_>) =
         [ for s1 in matchingStrNFA.Final do
             for s2 in nfa.Final do
                 s1 * nfa.Transitions.size + s2 ]
-
-    // save results of intersection to .dot file
-    // toDot (MatrixNFA<_>(newStartState, HashSet<_>(newFinalStates), intersection)) "out-intersection.dot"
 
     let projected =
         intersection
@@ -261,8 +253,6 @@ let findAll (nfa: MatrixNFA<_>) (input: list<_>) =
         [ for s1 in 0 .. nfa2.Transitions.size - 1 do
               for s2 in nfa.Final do
                   yield s1 * nfa.Transitions.size + s2 ]
-
-    // toDot (MatrixNFA<_>(newStartState, HashSet<_>(newFinalStates), intersection)) "out-find-all.dot"
 
     let projected =
         intersection

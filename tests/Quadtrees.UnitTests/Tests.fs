@@ -45,16 +45,9 @@ let tests =
                 |]
             
             let expected = closureArr2D 0 (+) (*) (fun x -> x > 0) matrix
-            let sparse = SparseMatrixQT(matrix', (fun () -> 0), (=))
-            //printfn $"%A{sparse.quadtree}"
-            printfn $"%A{SparseMatrixQT.toArray2D 0 sparse}"
-            
-            //printfn $"FUCKING SLAAAAVE: %A{matrix}"
-            //printfn $"MASTER??????: %A{expected}"
+            let sparse = SparseMatrixQT(matrix', (fun () -> 0), (=))       
             let resSparse = SparseMath.closure semiring (fun x -> x > 0) sparse
             let actual = SparseMatrixQT.toArray2D 0 resSparse
-            printfn $"Actual:\n %A{actual}"
-            printfn $"Expected:\n %A{expected}"
             Expect.equal actual expected ""
             
         let helperMult (matrixA: int[,]) (matrixB: int[,]) =
@@ -78,13 +71,6 @@ let tests =
             let sparseB = SparseMatrixQT(matrixB, (fun () -> 0), (=))
             let expected = tensorMultiply (*) matrixA matrixB
             let resSparse = SparseMath.tensorMultiply' semiring sparseA sparseB
-            let actual = SparseMatrixQT.toArray2D 0 resSparse
-            actual, expected
-            
-        let helperClosure (matrix: int[,]) =
-            let sparse = SparseMatrixQT(matrix, (fun () -> 0), (=))
-            let expected = closureArr2D 0 (+) (*) (fun _ -> true) matrix
-            let resSparse = SparseMath.closure semiring (fun _ -> true) sparse
             let actual = SparseMatrixQT.toArray2D 0 resSparse
             actual, expected
         

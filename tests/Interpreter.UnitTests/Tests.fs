@@ -26,7 +26,7 @@ let thirdAtm =
 
 let fourthAtm =
     // (a|b)*c
-    (Seq (Star (Alt (RSmb 'a', RSmb 'b')), RSmb 'c')) |> makeAtm     
+    (Seq (Star (Alt (RSmb 'a', RSmb 'b')), RSmb 'c')) |> makeAtm   
 
 let prepareStr (str: string) =
     str.ToCharArray() |> List.ofArray

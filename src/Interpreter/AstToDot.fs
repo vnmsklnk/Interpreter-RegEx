@@ -89,8 +89,6 @@ let rec procRegExp expr =
         let alt = makeLabel "Regex.Alt"
         let first, second = procRegExp regex1, procRegExp regex2
         Tree(alt, first, second)
-    // todo: should this case be an 'Expr case' ?
-    // todo: (probably we need to fix this also in FsLex, FsYacc; not sure)
     | AST.Intersect (regex1, regex2) ->
         let intersect = makeLabel "Regex.Intersect"
         let first, second = procRegExp regex1, procRegExp regex2
