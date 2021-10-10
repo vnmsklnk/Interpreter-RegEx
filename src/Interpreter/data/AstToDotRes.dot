@@ -1,0 +1,81 @@
+digraph nfa
+{
+rankdir = LR
+node [shape = circle];
+0[shape = circle, label = "0_Start"]
+0 -> 2 [label = "Eps"]
+
+0 -> 4 [label = "Eps"]
+
+0 -> 5 [label = "Eps"]
+
+3 -> 4 [label = "Eps"]
+
+3 -> 5 [label = "Eps"]
+
+2 -> 7 [label = "1"]
+
+5 -> 0 [label = "Eps"]
+
+6 -> 2 [label = "Eps"]
+
+4 -> 6 [label = "Eps"]
+
+5 -> 6 [label = "Eps"]
+
+6 -> 4 [label = "Eps"]
+
+0 -> 8 [label = "Eps"]
+
+1 -> 11 [label = "Eps"]
+
+7 -> 13 [label = "Eps"]
+
+11 -> 1 [label = "Eps"]
+
+14 -> 1 [label = "Eps"]
+
+15 -> 4 [label = "Eps"]
+
+9 -> 10 [label = "Eps"]
+
+9 -> 13 [label = "Eps"]
+
+11 -> 12 [label = "Eps"]
+
+13 -> 9 [label = "Eps"]
+
+16 -> 17 [label = "Eps"]
+
+18 -> 19 [label = "Eps"]
+
+20 -> 21 [label = "Eps"]
+
+22 -> 23 [label = "Eps"]
+
+16 -> 25 [label = "Eps"]
+
+18 -> 27 [label = "Eps"]
+
+20 -> 29 [label = "Eps"]
+
+22 -> 31 [label = "Eps"]
+
+25 -> 16 [label = "Eps"]
+
+27 -> 18 [label = "Eps"]
+
+29 -> 20 [label = "Eps"]
+
+31 -> 22 [label = "Eps"]
+
+24 -> 25 [label = "Eps"]
+
+26 -> 27 [label = "Eps"]
+
+28 -> 29 [label = "Eps"]
+
+30 -> 31 [label = "Eps"]
+
+1[shape = doublecircle]
+}

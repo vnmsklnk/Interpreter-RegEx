@@ -2,15 +2,14 @@ let [q] = (x|a)
 let [z] = [q]*a
 let [z1] = (x|y)*a
 
-let [findRes] = findAll "xyy" [q]
+let [a] = 1*
+let [b] = 1*
 
+let [c] = [a]&[b]
+let [x] = isAcceptable "1" [c]
 
-let [acc] = isAcceptable "yyxa" [z]
-
-let [x] = isAcceptable "yyyxa" (x?y*x?a)
-
-let [last] = (x?y*x?a)
-
-printToDot [last] "/home/ivan/Desktop/test.dot"
+printToDot [a] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotA.dot"
+printToDot [b] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotB.dot"
+printToDot [c] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotRes.dot"
 
 print [x]

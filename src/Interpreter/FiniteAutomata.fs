@@ -90,6 +90,9 @@ let nfaToDot outputFile (nfa: NFA<'t>) =
 
     System.IO.File.WriteAllLines(outputFile, header @ content @ footer)
 
+let first (a, _, _) = a
+let second (_, a, _) = a
+let third (_, _, a) = a
 /// Converts regex to NFA
 let regexToNFA regex =
     let rec _go curFreeState currRegex =
@@ -140,5 +143,65 @@ let regexToNFA regex =
             NFA<_>(newStart, newFinal, transitions)
 
         | Intersect (left, right) ->
-            raise (NotImplementedException())
+
+            let lAtm = _go curFreeState left
+            let rAtm = _go (lAtm.Final + 1) right
+            
+            let newStart = (lAtm.Start, rAtm.Start)
+            let newFinal = (lAtm.Final, rAtm.Final)
+            let mutable transitions = List.empty
+            
+            for fromState, smb, toState in lAtm.Transitions do
+                for _ in rAtm.Transitions do
+                    let res = List.tryFind (fun (_, innerSmb, _) -> innerSmb = smb) rAtm.Transitions
+                    if res.IsSome
+                    then transitions <- transitions @ [(fromState, res.Value |> first), smb, (toState, res.Value |> third)]
+            
+            let getAllFrom transitions =
+                let mutable fromStates = List.empty
+                for fromState, smb, toState in transitions do
+                    fromStates <- fromStates @ [fromState]
+                fromStates
+                
+            for state in lAtm.Transitions do
+                match state with
+                | fromState, Eps, toState ->
+                    for state in (getAllFrom rAtm.Transitions) do
+                    transitions <- transitions @ [(fromState, state), Eps, (toState, state)]
+                | _ -> printfn $"=> %A{state}"
+            
+            for state in rAtm.Transitions do
+                match state with
+                | fromState, Eps, toState ->
+                    for state in (getAllFrom lAtm.Transitions) do
+                        transitions <- transitions @ [(fromState, state), Eps, (toState, state)]
+                | _ -> printfn $"=> %A{state}"
+            
+            let mutable counter = 1
+            let reEnum = Dictionary<int * int, int>();
+            reEnum.[newStart] <- 0
+            reEnum.[newFinal] <- 1
+            
+            let reTrans =
+                transitions
+                |> List.distinct
+                |> List.map
+                    (fun (fromState, smb, toState) ->
+                        match reEnum.ContainsKey fromState, reEnum.ContainsKey toState with
+                        | true, true -> reEnum.[fromState], smb, reEnum.[toState]
+                        | true, false ->
+                            counter <- counter + 1
+                            reEnum.[toState] <- counter 
+                            reEnum.[fromState], smb, counter
+                        | false, true ->
+                            counter <- counter + 1
+                            reEnum.[fromState] <- counter 
+                            counter, smb, reEnum.[toState]
+                        | false, false ->
+                            counter <- counter + 2
+                            reEnum.[fromState] <- counter - 1
+                            reEnum.[toState] <- counter
+                            counter - 1, smb, counter
+                    )
+            NFA<_>(0, 1, reTrans)
     _go 0 regex
