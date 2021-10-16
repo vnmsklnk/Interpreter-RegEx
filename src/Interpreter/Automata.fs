@@ -35,27 +35,6 @@ let epsSmbSetSR () =
 let epsSmbSetOps () =
     epsSmbSetSR() |> getOps
 
-let nfaToMatrixNFA (nfa: NFA<_>) =
-    let resMtx =
-        let maxState =
-            nfa.Transitions
-            |> List.fold (fun a (start, _, final) -> max (max start a) final) 0
-
-        let mutable sparseMtx =
-            SparseMtx((maxState + 1), epsSmbSetOps())
-
-        nfa.Transitions
-        |> List.iter (
-            fun (s, l, f) ->
-                let gotElem = sparseMtx.[s, f]
-                gotElem.Add l |> ignore
-                sparseMtx.[s, f] <- gotElem
-            )
-
-        sparseMtx
-
-    MatrixNFA<_>(HashSet<_>([ nfa.Start ]), HashSet<_>([ nfa.Final ]), resMtx)
-
 let seqToAtm (input: list<_>) =
     let resMtx =
         let mutable sparseMtx =
@@ -108,9 +87,6 @@ let toDot (nfa: MatrixNFA<_>) outFile =
 let epsClosure (atm: MatrixNFA<_>) =
     let epsCls =
         MatrixAlgebra.closure (epsSmbSetSR()) (fun i -> i.Count > 0) atm.Transitions
-
-    let intermediateResult =
-        MatrixNFA<_>(atm.Start, atm.Final, epsCls)
 
     let newFinals = HashSet<_>()
 

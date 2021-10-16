@@ -9,7 +9,6 @@ open Expecto
 let makeAtm regexp =
     regexp
     |> regexToNFA
-    |> nfaToMatrixNFA
     |> epsClosure
 
 let fstAtm =

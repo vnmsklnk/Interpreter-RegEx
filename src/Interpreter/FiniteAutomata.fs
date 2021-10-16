@@ -1,10 +1,12 @@
 ﻿module Interpreter.FiniteAutomata
-
+open Quadtrees.MutableQT
 open System
 open System.Collections.Generic
 open Interpreter.Symbols
 open MatrixLib.AlgStructs
+open MatrixLib.MatrixAlgebra
 open MatrixLib.Operators
+open MatrixLib.Operators.CommonOps
 open MatrixLib.SparseMtx
 
 [<Struct>]
@@ -18,206 +20,230 @@ type MatrixNFA<'t> =
           Final = final
           Transitions = transitions }
 
-/// Represents Non-Deterministic Finite Automata
-[<Struct>]
-type NFA<'t> =
-    val Start: int
-    val Final: int
-    val Transitions: list<int * NFASmb<'t> * int>
+let toSet (elem: 'a) = HashSet<'a>(seq {elem})
 
-    new(start, final, transitions) =
-        { Start = start
-          Final = final
-          Transitions = transitions }
+let getElemFromSet (set: HashSet<int>) = set |> seq |> Seq.head
+let addNToSetElem (set: HashSet<int>) (n: int) = (getElemFromSet set) + n
 
-/// Matches string to regex grammar
-let recognizeNFA (atm: NFA<_>) (input: list<_>) =
-    let visited = HashSet<_>()
+let addToMtx (i, j) elem (mat: SparseMtx<HashSet<NFASmb<_>>>) =
+    let newHashSet = HashSet(mat.[i, j])
+    newHashSet.Add(elem) |> ignore
+    newHashSet
+let private setsEquality (set1: HashSet<_>) (set2: HashSet<_>) =
+    set1.SetEquals(set2)
+        
+let private setsAddition (set1: HashSet<_>) (set2: HashSet<_>) =
+    set1.UnionWith(set2)
+    set1
 
-    let step currState currInput =
-        visited.Add((currState, currInput)) |> ignore
+// todo: refactor this
+let private epsSmbSetsMultiply (set1: HashSet<NFASmb<_>>) (set2: HashSet<_>) =
+    let res = HashSet<_>()
 
-        atm.Transitions
-        |> List.choose
-            (fun (start, transitionSmb, final) ->
-                if start = currState then
-                    match transitionSmb with
-                    | Eps -> Some(final, currInput)
-                    | Smb smb ->
-                        match currInput with
-                        | _ -> None
-                        | currSmb :: rest when smb = currSmb -> Some(final, rest)
-                else None)
+    for x in set1 do
+        for y in set2 do
+            match x, y with
+            | Eps, smth -> res.Add smth |> ignore
+            | _ -> ()
 
-    let rec _go configurations =
-        match configurations with
-        | [] -> false
-        | (state, input) :: tail ->
-            let containsFinal =
-                configurations
-                |> List.exists
-                    (fun (state, input) ->
-                        state = atm.Final && input = [])
+    res
+let epsSmbSetSR () =
+    let zero = fun _ -> HashSet<_>()
+    Semiring(zero, setsEquality, setsAddition, epsSmbSetsMultiply)
+let intersection a b =
+    MatrixAlgebra.kroneckerProduct (epsSmbSetSR()) a b
+    
+let epsClosure (atm: MatrixNFA<_>) =
+    let epsCls =
+        MatrixAlgebra.closure (epsSmbSetSR()) (fun i -> i.Count > 0) atm.Transitions
 
-            let notVisited =
-                step state input
-                |> List.filter
-                    (fun x ->
-                        visited.Contains x |> not)
+    let newFinals = HashSet<_>()
 
-            containsFinal || (_go (tail @ notVisited))
+    epsCls.tree
+    |> MutableQT.iteri
+        (fun i j x ->
+            if x.Contains Eps && atm.Final.Contains(int j) then
+                newFinals.Add(int i) |> ignore)
 
-    _go [ (atm.Start, input) ]
+    newFinals.UnionWith atm.Final
 
-/// Converts NFA to .dot format (graphviz),
-/// saves to specified path 
-let nfaToDot outputFile (nfa: NFA<'t>) =
+    epsCls.tree
+    |> MutableQT.iteri (fun _ _ x -> x.Remove Eps |> ignore)
+
+    let res =
+        MatrixNFA<_>(atm.Start, newFinals, epsCls)
+
+    let boolMtx =
+        res.Transitions
+        |> SparseMtx.map booleanOps (fun x -> x.Count > 0)
+
+    let reachable =
+        MatrixAlgebra.closure CommonSR.booleanSR id boolMtx
+
+    let reachableFromStart = HashSet<_>()
+
+    reachable.tree
+    |> MutableQT.iteri
+        (fun i j x ->
+            if x && atm.Start.Contains(int i) then
+                reachableFromStart.Add(int j) |> ignore)
+
+    reachableFromStart.UnionWith atm.Start
+
+    let newStateToOldState = Dictionary<_, _>()
+
+    reachableFromStart
+    |> Seq.iteri (fun i x -> newStateToOldState.Add(i, x))
+
+    let newTransitions =
+        SparseMtx.init
+            newStateToOldState.Count
+            (epsSmbSetSR() |> getOps)
+            (fun i j -> epsCls.[newStateToOldState.[i], newStateToOldState.[j]])
+
+    let res =
+        MatrixNFA<_>(
+            newStateToOldState
+            |> Seq.filter (fun x -> atm.Start.Contains x.Value)
+            |> Seq.map (fun kvp -> kvp.Key)
+            |> HashSet<_>,
+            newStateToOldState
+            |> Seq.filter (fun x -> newFinals.Contains x.Value)
+            |> Seq.map (fun kvp -> kvp.Key)
+            |> HashSet<_>,
+            newTransitions
+        )
+        
+    res
+
+let toDota2 (nfa: MatrixNFA<_>) outFile =
     let header =
-        [ "digraph nfa {"
+        [ "digraph nfa"
+          "{"
           "rankdir = LR"
           "node [shape = circle];"
-          $"%d{nfa.Start} [shape = circle, label = \"%d{nfa.Start}_Start\"]" ]
+          for s in nfa.Start do
+              $"%A{s}[shape = circle, label = \"%A{s}_Start\"]" ]
 
     let footer =
-        [ $"%d{nfa.Final} [shape = doublecircle]"
+        [ for s in nfa.Final do
+            $"%A{s}[shape = doublecircle]"
           "}" ]
 
-    let content =
-        [ for start, transitionSmb, final in nfa.Transitions ->
-            let label =
-                match transitionSmb with
-                | Eps -> "Eps"
-                | Smb t -> $"%A{t}"
-            $"%i{start} -> %i{final} [label = \"%s{label}\"]"]
+    let transitionsDotStrings start finish (hashSet: HashSet<NFASmb<_>>) =
+        seq {
+            for elem in hashSet do
+                let label =
+                    match elem with
+                    | Eps -> "Eps"
+                    | Smb symbol -> symbol.ToString()
 
-    System.IO.File.WriteAllLines(outputFile, header @ content @ footer)
+                $"{start} -> {finish} [label = \"{label}\"]\n"
+        }
+        |> List.ofSeq
 
-let first (a, _, _) = a
-let second (_, a, _) = a
-let third (_, _, a) = a
+    let mutable _content = List.empty
 
-let toSet (elem: 'a) = HashSet<'a>(seq {elem}) 
+    let saveToList x y hashSet =
+        _content <- _content @ transitionsDotStrings x y hashSet
+
+    nfa.Transitions.tree
+    |> MutableQT.iteri saveToList
+
+    System.IO.File.WriteAllLines(outFile, header @ _content @ footer)
 
 /// Converts regex to NFA
 let regexToNFA regex: MatrixNFA<_> =
-    let mtx = SparseMtx(2, toOps (fun () -> HashSet<NFASmb<_>>()) CommonOps.hashSetEq)
-    let mutable resMatrix: MatrixNFA<_> = MatrixNFA(toSet 0, toSet 1, mtx) 
+    let mutable transitions = SparseMtx(2, toOps (fun () -> HashSet<NFASmb<_>>()) CommonOps.hashSetEq)
     let rec _go curFreeState currRegex =
         match currRegex with
         | REps ->
-            let fromState, toState = curFreeState, curFreeState + 1
-            if toState < resMatrix.Transitions.size then
-                // todo: check if this really adds one new element to set
-                resMatrix.Transitions.[fromState, toState].Add Eps |> ignore
-            else
-                let newTrans = resMatrix.Transitions |> SparseMtx.doubleSize
-                newTrans.[curFreeState, curFreeState + 1].Add Eps|> ignore
-                
-                MatrixNFA<_>(toSet curFreeState, curFreeState + 1, [ (curFreeState, Eps, curFreeState + 1) ])
-        | RSmb s -> NFA<_>(curFreeState, curFreeState + 1, [ (curFreeState, Smb(s), curFreeState + 1) ])
+            let i, j = curFreeState, curFreeState + 1
+            if j >= transitions.size then
+                transitions <- transitions |> SparseMtx.doubleSize
+            transitions.[i, j] <- transitions |> addToMtx (i, j) Eps
+            MatrixNFA<_>(toSet i, toSet j, transitions)
+        | RSmb s ->
+            let i, j = curFreeState, curFreeState + 1
+            if j >= transitions.size then
+                transitions <- transitions |> SparseMtx.doubleSize
+            transitions.[i, j] <- transitions |> addToMtx (i, j) (Smb(s))
+            MatrixNFA<_>(toSet i, toSet j, transitions)
         | Alt (left, right) ->
             let lAtm = _go curFreeState left
-            let rAtm = _go (lAtm.Final + 1) right
-            let newStart = rAtm.Final + 1
-            let newFinal = rAtm.Final + 2
+            let rAtm = _go (addNToSetElem lAtm.Final 1) right
+            let i = addNToSetElem rAtm.Final 1
+            let j = addNToSetElem rAtm.Final 2
+            
+            let lAtmStart, lAtmFinal = getElemFromSet lAtm.Start, getElemFromSet lAtm.Final
+            let rAtmStart, rAtmFinal = getElemFromSet rAtm.Start, getElemFromSet rAtm.Final
+            
+            if j >= transitions.size then
+                transitions <- transitions |> SparseMtx.doubleSize
+            
+            transitions.[i,  lAtmStart] <-  transitions |> addToMtx (i,  lAtmStart) Eps
+            transitions.[i,  rAtmStart] <-  transitions |> addToMtx (i,  rAtmStart) Eps
+            transitions.[lAtmFinal, j] <-  transitions |> addToMtx (lAtmFinal, j) Eps
+            transitions.[rAtmFinal, j] <-  transitions |> addToMtx (rAtmFinal, j) Eps
 
-            let transitions =
-                [ (newStart, Eps, lAtm.Start)
-                  (newStart, Eps, rAtm.Start)
-                  (lAtm.Final, Eps, newFinal)
-                  (rAtm.Final, Eps, newFinal) ]
-                @ rAtm.Transitions @ lAtm.Transitions
-
-            NFA<_>(newStart, newFinal, transitions)
+            MatrixNFA<_>(toSet i, toSet j, transitions)
 
         | Seq (left, right) ->
             let lAtm = _go curFreeState left
-            let rAtm = _go (lAtm.Final + 1) right
-            let newStart = rAtm.Final + 1
-            let newFinal = rAtm.Final + 2
+            let rAtm = _go (addNToSetElem lAtm.Final 1) right
+            let i = addNToSetElem rAtm.Final 1
+            let j = addNToSetElem rAtm.Final 2
+            
+            let lAtmStart, lAtmFinal = getElemFromSet lAtm.Start, getElemFromSet lAtm.Final
+            let rAtmStart, rAtmFinal = getElemFromSet rAtm.Start, getElemFromSet rAtm.Final
 
-            let transitions =
-                [ (newStart, Eps, lAtm.Start)
-                  (lAtm.Final, Eps, rAtm.Start)
-                  (rAtm.Final, Eps, newFinal) ]
-                @ rAtm.Transitions @ lAtm.Transitions
-
-            NFA<_>(newStart, newFinal, transitions)
+            if j >= transitions.size then
+                transitions <- transitions |> SparseMtx.doubleSize
+            
+            transitions.[i, lAtmStart]          <- transitions |> addToMtx (i, lAtmStart) Eps
+            transitions.[lAtmFinal, rAtmStart]  <- transitions |> addToMtx (lAtmFinal, rAtmStart) Eps
+            transitions.[rAtmFinal, j]          <- transitions |> addToMtx (rAtmFinal, j) Eps
+            
+            MatrixNFA<_>(toSet i, toSet j, transitions)
 
         | Star re ->
             let newAtm = _go curFreeState re
-            let newStart = newAtm.Final + 1
-            let newFinal = newAtm.Final + 2
-
-            let transitions =
-                [ (newStart, Eps, newAtm.Start)
-                  (newAtm.Final, Eps, newFinal)
-                  (newStart, Eps, newFinal)
-                  (newFinal, Eps, newStart) ]
-                @ newAtm.Transitions
-
-            NFA<_>(newStart, newFinal, transitions)
+            let newAtmStart, newAtmFinal =
+                getElemFromSet newAtm.Start,
+                getElemFromSet newAtm.Final
+            
+            let i = addNToSetElem newAtm.Final 1
+            let j = addNToSetElem newAtm.Final 2
+            
+            if j >= transitions.size then
+                transitions <- transitions |> SparseMtx.doubleSize
+            
+            transitions.[i,    newAtmStart] <- transitions |> addToMtx (i,    newAtmStart) Eps
+            transitions.[newAtmFinal, j] <- transitions |> addToMtx (newAtmFinal, j) Eps
+            transitions.[i,    j] <- transitions |> addToMtx (i,    j) Eps
+            transitions.[j,    i] <- transitions |> addToMtx (j,    i) Eps
+            MatrixNFA<_>(toSet i, toSet j, transitions)
 
         | Intersect (left, right) ->
-
             let lAtm = _go curFreeState left
-            let rAtm = _go (lAtm.Final + 1) right
+            let rAtm = _go (addNToSetElem lAtm.Final 1) right
             
-            let newStart = (lAtm.Start, rAtm.Start)
-            let newFinal = (lAtm.Final, rAtm.Final)
-            let mutable transitions = List.empty
+            toDota2 (epsClosure lAtm) "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/lAtm_intersect_01.dot"
+            toDota2 (epsClosure rAtm) "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/rAtm_intersect_01.dot"
             
-            for fromState, smb, toState in lAtm.Transitions do
-                for _ in rAtm.Transitions do
-                    let res = List.tryFind (fun (_, innerSmb, _) -> innerSmb = smb) rAtm.Transitions
-                    if res.IsSome
-                    then transitions <- transitions @ [(fromState, res.Value |> first), smb, (toState, res.Value |> third)]
+            let intersection = intersection lAtm.Transitions rAtm.Transitions
+            printfn "intersex = %A" (intersection |> SparseMtx.toArray2D)
             
-            let getAllFrom transitions =
-                let mutable fromStates = List.empty
-                for fromState, smb, toState in transitions do
-                    fromStates <- fromStates @ [fromState]
-                fromStates
+            let newStartState =
+                let lAtmStart = lAtm.Start |> getElemFromSet
+                let rAtmStart = rAtm.Start |> getElemFromSet
+                toSet (lAtmStart * rAtm.Transitions.size + rAtmStart)
+
+            let newFinalState =
+                let lAtmFinal = lAtm.Final |> getElemFromSet
+                let rAtmFinal = rAtm.Final |> getElemFromSet
+                toSet (lAtmFinal * rAtm.Transitions.size + rAtmFinal)
                 
-            for state in lAtm.Transitions do
-                match state with
-                | fromState, Eps, toState ->
-                    for state in (getAllFrom rAtm.Transitions) do
-                    transitions <- transitions @ [(fromState, state), Eps, (toState, state)]
-                | _ -> printfn $"=> %A{state}"
-            
-            for state in rAtm.Transitions do
-                match state with
-                | fromState, Eps, toState ->
-                    for state in (getAllFrom lAtm.Transitions) do
-                        transitions <- transitions @ [(fromState, state), Eps, (toState, state)]
-                | _ -> printfn $"=> %A{state}"
-            
-            let mutable counter = 1
-            let reEnum = Dictionary<int * int, int>();
-            reEnum.[newStart] <- 0
-            reEnum.[newFinal] <- 1
-            
-            let reTrans =
-                transitions
-                |> List.distinct
-                |> List.map
-                    (fun (fromState, smb, toState) ->
-                        match reEnum.ContainsKey fromState, reEnum.ContainsKey toState with
-                        | true, true -> reEnum.[fromState], smb, reEnum.[toState]
-                        | true, false ->
-                            counter <- counter + 1
-                            reEnum.[toState] <- counter 
-                            reEnum.[fromState], smb, counter
-                        | false, true ->
-                            counter <- counter + 1
-                            reEnum.[fromState] <- counter 
-                            counter, smb, reEnum.[toState]
-                        | false, false ->
-                            counter <- counter + 2
-                            reEnum.[fromState] <- counter - 1
-                            reEnum.[toState] <- counter
-                            counter - 1, smb, counter
-                    )
-            NFA<_>(0, 1, reTrans)
+            MatrixNFA<_>(newStartState, newFinalState, intersection)
+        
     _go 0 regex

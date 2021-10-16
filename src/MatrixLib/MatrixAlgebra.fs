@@ -16,25 +16,6 @@ module MatrixAlgebra =
         
         SparseMtx(res, toOps sr.zero sr.eq)
 
-    /// Naive multiplication of two sparse matrices;
-    /// iterate over matrices, multiply existing values, then insert result to new matrix
-    /// (this method is significantly slower than multiplication using recursive matrix traversal)
-    let multiplyNaive (sr: Semiring<'a>) (mtxA: SparseMtx<'a>) (mtxB: SparseMtx<'a>) =
-        // check square matrix size
-        if mtxA.size <> mtxB.size then
-            failwith $"Incorrect size of input matrices: [{mtxA.size}x{mtxA.size}], [{mtxB.size}x{mtxB.size}]"
-
-        let mutable res =
-            SparseMtx(mtxA.size, toOps sr.zero sr.eq)
-
-        for x in 0 .. mtxA.size - 1 do
-            for y in 0 .. mtxB.size - 1 do
-                let mutable acc = sr.zero()
-                for z in 0 .. mtxA.size - 1 do
-                    acc <- sr.add acc (sr.mul mtxA.[x, z] mtxB.[z, y])
-                res.[x, y] <- acc
-        res
-
     let multiply (sr: Semiring<_>) (mtx1: SparseMtx<_>) (mtx2: SparseMtx<_>) =
         let ops = equalityToZero sr, sr.add
         // recursive multiply of square region quadtree

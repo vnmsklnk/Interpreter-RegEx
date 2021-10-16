@@ -2,7 +2,7 @@ digraph nfa
 {
 rankdir = LR
 node [shape = circle];
-2[shape = circle, label = "2_Start"]
+10[shape = circle, label = "10_Start"]
 0 -> 1 [label = "1"]
 
 1 -> 3 [label = "Eps"]
@@ -13,5 +13,23 @@ node [shape = circle];
 
 3 -> 2 [label = "Eps"]
 
-3[shape = doublecircle]
+4 -> 5 [label = "Eps"]
+
+6 -> 7 [label = "2"]
+
+3 -> 8 [label = "Eps"]
+
+5 -> 9 [label = "Eps"]
+
+7 -> 9 [label = "Eps"]
+
+10 -> 2 [label = "Eps"]
+
+8 -> 4 [label = "Eps"]
+
+8 -> 6 [label = "Eps"]
+
+9 -> 11 [label = "Eps"]
+
+11[shape = doublecircle]
 }

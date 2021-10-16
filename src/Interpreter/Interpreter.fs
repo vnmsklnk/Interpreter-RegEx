@@ -5,6 +5,7 @@ open System.IO
 open Interpreter.FiniteAutomata
 open FSharp.Text.Lexing
 open Interpreter.Automata
+open MatrixLib.SparseMtx
 
 let private newDataToConsole = Event<string>()
 
@@ -75,8 +76,7 @@ let rec processRegExp (valueDict: Dictionary<_, _>) re =
 let processExpression vDict expression =
     let makeAtm astRegex =
         let regex = processRegExp vDict astRegex
-        let nfa = regexToNFA regex
-        let transitionsMtx = nfaToMatrixNFA nfa
+        let transitionsMtx = regexToNFA regex
         epsClosure transitionsMtx
 
     match expression with
@@ -113,8 +113,6 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
                 let mtxNFA =
                     regEx
                     |> regexToNFA
-                    |> nfaToMatrixNFA
-                
                 match File.Exists fullPath with
                 | false -> Error $"Specified file not found: {fullPath}"
                 | true ->

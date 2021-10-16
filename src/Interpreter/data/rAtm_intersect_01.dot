@@ -1,0 +1,6 @@
+digraph nfa
+{
+rankdir = LR
+node [shape = circle];
+0[shape = circle, label = "0_Start"]
+}
