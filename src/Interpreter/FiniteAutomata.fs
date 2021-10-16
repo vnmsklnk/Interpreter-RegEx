@@ -2,19 +2,21 @@
 
 open System
 open System.Collections.Generic
+open Interpreter.Symbols
+open MatrixLib.AlgStructs
+open MatrixLib.Operators
+open MatrixLib.SparseMtx
 
-type NFASmb<'t> =
-    | Eps
-    | Smb of 't
+[<Struct>]
+type MatrixNFA<'t> =
+    val Start: HashSet<int>
+    val Final: HashSet<int>
+    val Transitions: HashSet<NFASmb<'t>> SparseMtx
 
-/// Generic regex grammar
-type RegEx<'t> =
-    | REps
-    | RSmb of 't
-    | Seq of RegEx<'t> * RegEx<'t>
-    | Alt of RegEx<'t> * RegEx<'t>
-    | Star of RegEx<'t>
-    | Intersect of RegEx<'t> * RegEx<'t> // todo: implement
+    new(start, final, transitions) =
+        { Start = start
+          Final = final
+          Transitions = transitions }
 
 /// Represents Non-Deterministic Finite Automata
 [<Struct>]
@@ -93,11 +95,25 @@ let nfaToDot outputFile (nfa: NFA<'t>) =
 let first (a, _, _) = a
 let second (_, a, _) = a
 let third (_, _, a) = a
+
+let toSet (elem: 'a) = HashSet<'a>(seq {elem}) 
+
 /// Converts regex to NFA
-let regexToNFA regex =
+let regexToNFA regex: MatrixNFA<_> =
+    let mtx = SparseMtx(2, toOps (fun () -> HashSet<NFASmb<_>>()) CommonOps.hashSetEq)
+    let mutable resMatrix: MatrixNFA<_> = MatrixNFA(toSet 0, toSet 1, mtx) 
     let rec _go curFreeState currRegex =
         match currRegex with
-        | REps -> NFA<_>(curFreeState, curFreeState + 1, [ (curFreeState, Eps, curFreeState + 1) ])
+        | REps ->
+            let fromState, toState = curFreeState, curFreeState + 1
+            if toState < resMatrix.Transitions.size then
+                // todo: check if this really adds one new element to set
+                resMatrix.Transitions.[fromState, toState].Add Eps |> ignore
+            else
+                let newTrans = resMatrix.Transitions |> SparseMtx.doubleSize
+                newTrans.[curFreeState, curFreeState + 1].Add Eps|> ignore
+                
+                MatrixNFA<_>(toSet curFreeState, curFreeState + 1, [ (curFreeState, Eps, curFreeState + 1) ])
         | RSmb s -> NFA<_>(curFreeState, curFreeState + 1, [ (curFreeState, Smb(s), curFreeState + 1) ])
         | Alt (left, right) ->
             let lAtm = _go curFreeState left

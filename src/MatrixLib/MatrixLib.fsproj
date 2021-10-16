@@ -6,19 +6,18 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="AlgebraicStructures.fs"/>
-        <Compile Include="Utils.fs"/>
-        <Compile Include="SparseMatrixQT.fs"/>
-        <Compile Include="SparseMath.fs"/>
+        <Compile Include="Structures.fs" />
+        <Compile Include="SparseArray2D.fs" />
+        <Compile Include="SparseMtx.fs" />
+        <Compile Include="MatrixAlgebra.fs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.Runtime.Numerics" Version="4.3.0"/>
+        <ProjectReference Include="..\Quadtrees\Quadtrees.fsproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Quadtrees\Quadtrees.fsproj"/>
+      <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
     </ItemGroup>
-
-    <Import Project="..\..\.paket\Paket.Restore.targets"/>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

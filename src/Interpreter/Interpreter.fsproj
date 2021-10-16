@@ -28,7 +28,7 @@
         
         <Compile Include="Parser.fs" />
         <Compile Include="Lexer.fs" />
-
+        <Compile Include="Symbols.fs" />
         <Compile Include="FiniteAutomata.fs" />
         <Compile Include="Automata.fs" />
         <Compile Include="Interpreter.fs" />

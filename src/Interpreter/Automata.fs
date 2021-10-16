@@ -1,31 +1,23 @@
 module Interpreter.Automata
-
+open Interpreter.Symbols
 open System.Collections.Generic
-open MatrixLib.SparseMatrixQT
-open MatrixLib.AlgebraicStructures
+open MatrixLib.MatrixAlgebra
+open MatrixLib.SparseMtx
+open MatrixLib.AlgStructs
+open MatrixLib.Operators.CommonOps
+open MatrixLib.AlgStructs.CommonSR
 open FiniteAutomata
 open Quadtrees.MutableQT
 
-[<Struct>]
-type MatrixNFA<'t> =
-    val Start: HashSet<int>
-    val Final: HashSet<int>
-    val Transitions: HashSet<NFASmb<'t>> SparseMatrixQT
+let private setsEquality (set1: HashSet<_>) (set2: HashSet<_>) =
+    set1.SetEquals(set2)
+        
+let private setsAddition (set1: HashSet<_>) (set2: HashSet<_>) =
+    set1.UnionWith(set2)
+    set1
 
-    new(start, final, transitions) =
-        { Start = start
-          Final = final
-          Transitions = transitions }
-
-let inline addSets (set1: HashSet<_>) (set2: HashSet<_>) =
-    let res =
-        if set1 = null then HashSet<_>()
-        else HashSet<_>(set1)
-
-    res.UnionWith set2
-    res
-
-let inline multiplySets (set1: HashSet<_>) (set2: HashSet<_>) =
+// todo: refactor this
+let private epsSmbSetsMultiply (set1: HashSet<NFASmb<_>>) (set2: HashSet<_>) =
     let res = HashSet<_>()
 
     for x in set1 do
@@ -36,11 +28,12 @@ let inline multiplySets (set1: HashSet<_>) (set2: HashSet<_>) =
 
     res
 
-let semiringBool =
-    { GetGenericZero = fun () -> false
-      Addition = (||)
-      Multiplication = (&&) }
-    
+let epsSmbSetSR () =
+    let zero = fun _ -> HashSet<_>()
+    Semiring(zero, setsEquality, setsAddition, epsSmbSetsMultiply)
+
+let epsSmbSetOps () =
+    epsSmbSetSR() |> getOps
 
 let nfaToMatrixNFA (nfa: NFA<_>) =
     let resMtx =
@@ -49,7 +42,7 @@ let nfaToMatrixNFA (nfa: NFA<_>) =
             |> List.fold (fun a (start, _, final) -> max (max start a) final) 0
 
         let mutable sparseMtx =
-            SparseMatrixQT((maxState + 1), (fun () -> HashSet<_>()))
+            SparseMtx((maxState + 1), epsSmbSetOps())
 
         nfa.Transitions
         |> List.iter (
@@ -66,7 +59,7 @@ let nfaToMatrixNFA (nfa: NFA<_>) =
 let seqToAtm (input: list<_>) =
     let resMtx =
         let mutable sparseMtx =
-            SparseMatrixQT((input.Length + 1), (fun () -> HashSet<_>()))
+            SparseMtx((input.Length + 1), epsSmbSetOps())
         
         for i in 0 .. input.Length - 1 do
             let gotElem = sparseMtx.[i, i + 1]
@@ -104,32 +97,24 @@ let toDot (nfa: MatrixNFA<_>) outFile =
 
     let mutable _content = List.empty
 
-    let saveToList (x: float) (y: float) hashSet =
-        let x, y = int x, int y
+    let saveToList x y hashSet =
         _content <- _content @ transitionsDotStrings x y hashSet
 
-    nfa.Transitions.quadtree
+    nfa.Transitions.tree
     |> MutableQT.iteri saveToList
-
 
     System.IO.File.WriteAllLines(outFile, header @ _content @ footer)
 
-
 let epsClosure (atm: MatrixNFA<_>) =
-    let semiringOfSets =
-        { GetGenericZero = fun () -> HashSet<_>()
-          Addition = addSets
-          Multiplication = multiplySets }
-
     let epsCls =
-        SparseMath.closure semiringOfSets (fun i -> i.Count > 0) atm.Transitions
+        MatrixAlgebra.closure (epsSmbSetSR()) (fun i -> i.Count > 0) atm.Transitions
 
     let intermediateResult =
         MatrixNFA<_>(atm.Start, atm.Final, epsCls)
 
     let newFinals = HashSet<_>()
 
-    epsCls.quadtree
+    epsCls.tree
     |> MutableQT.iteri
         (fun i j x ->
             if x.Contains Eps && atm.Final.Contains(int j) then
@@ -137,7 +122,7 @@ let epsClosure (atm: MatrixNFA<_>) =
 
     newFinals.UnionWith atm.Final
 
-    epsCls.quadtree
+    epsCls.tree
     |> MutableQT.iteri (fun _ _ x -> x.Remove Eps |> ignore)
 
     let res =
@@ -145,14 +130,14 @@ let epsClosure (atm: MatrixNFA<_>) =
 
     let boolMtx =
         res.Transitions
-        |> SparseMatrixQT.map (fun () -> false) (=) (fun x -> x.Count > 0)
+        |> SparseMtx.map booleanOps (fun x -> x.Count > 0)
 
     let reachable =
-        SparseMath.closure semiringBool id boolMtx
+        MatrixAlgebra.closure booleanSR id boolMtx
 
     let reachableFromStart = HashSet<_>()
 
-    reachable.quadtree
+    reachable.tree
     |> MutableQT.iteri
         (fun i j x ->
             if x && atm.Start.Contains(int i) then
@@ -166,10 +151,9 @@ let epsClosure (atm: MatrixNFA<_>) =
     |> Seq.iteri (fun i x -> newStateToOldState.Add(i, x))
 
     let newTransitions =
-        SparseMatrixQT.init
+        SparseMtx.init
             newStateToOldState.Count
-            (fun () -> HashSet<_>())
-            (fun a -> a.SetEquals)
+            (epsSmbSetOps())
             (fun i j -> epsCls.[newStateToOldState.[i], newStateToOldState.[j]])
 
     let res =
@@ -190,14 +174,10 @@ let epsClosure (atm: MatrixNFA<_>) =
 
 let accept (nfa: MatrixNFA<_>) (input: list<_>) =
     let matchingStrNFA = seqToAtm input
-    let semiringHashSets =
-        { GetGenericZero = fun () -> HashSet<_>()
-          Addition = addSets
-          Multiplication = multiplySets }
 
     let intersection =
-        SparseMath.tensorMultiply
-            semiringHashSets
+        MatrixAlgebra.kroneckerProduct
+            (epsSmbSetSR())
             matchingStrNFA.Transitions
             nfa.Transitions
             
@@ -214,10 +194,10 @@ let accept (nfa: MatrixNFA<_>) (input: list<_>) =
 
     let projected =
         intersection
-        |> SparseMatrixQT.map (fun () -> false) (=) (fun s -> s.Count > 0)
+        |> SparseMtx.map booleanOps (fun s -> s.Count > 0)
 
     let reachability =
-        SparseMath.closure semiringBool id projected
+        MatrixAlgebra.closure booleanSR id projected
 
     let result =
         newFinalStates
@@ -234,14 +214,8 @@ let accept (nfa: MatrixNFA<_>) (input: list<_>) =
 
 let findAll (nfa: MatrixNFA<_>) (input: list<_>) =
     let nfa2 = seqToAtm input
-
-    let semiringOfSets =
-        { GetGenericZero = fun () -> HashSet<_>()
-          Addition = addSets
-          Multiplication = multiplySets }
-
     let intersection =
-        SparseMath.tensorMultiply semiringOfSets nfa2.Transitions nfa.Transitions
+        MatrixAlgebra.kroneckerProduct (epsSmbSetSR()) nfa2.Transitions nfa.Transitions
 
     let newStartState =
         [ for s1 in 0 .. nfa2.Transitions.size - 1 do
@@ -256,10 +230,10 @@ let findAll (nfa: MatrixNFA<_>) (input: list<_>) =
 
     let projected =
         intersection
-        |> SparseMatrixQT.map (fun () -> false) (=) (fun s -> s.Count > 0)
+        |> SparseMtx.map booleanOps (fun s -> s.Count > 0)
 
     let reachability =
-        SparseMath.closure semiringBool id projected
+        MatrixAlgebra.closure booleanSR id projected
 
     [ for s1 in newFinalStates do
           for s2 in newStartState do

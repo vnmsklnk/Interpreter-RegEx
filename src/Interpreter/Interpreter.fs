@@ -1,5 +1,5 @@
 module Interpreter.Interpreter
-
+open Interpreter.Symbols
 open System.Collections.Generic
 open System.IO
 open Interpreter.FiniteAutomata
