@@ -1,5 +1,6 @@
 namespace MatrixLib.MatrixAlgebra
 
+open System
 open System.Collections.Generic
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT
@@ -204,7 +205,8 @@ module MatrixAlgebra =
                 let kek = multiplicationSets first second
                 res.[i, j] <- kek
         res
-        
+    
+    let isEqual x = raise (NotImplementedException())    // TODO: implement
     
     let closure sr condition (mtx: SparseMtx<_>) =
         let count cond (mtx': SparseMtx<_>) =

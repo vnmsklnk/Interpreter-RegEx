@@ -35,9 +35,6 @@
         <Compile Include="RegexpParser.fs" />
         <Compile Include="AstToDot.fs" />
         <Content Include="data\regex_test.txt" />
-        <Content Include="data\AstToDotA.dot" />
-        <Content Include="data\AstToDotB.dot" />
-        <Content Include="data\AstToDotRes.dot" />
     </ItemGroup>
 
 <!--    <ItemGroup>-->

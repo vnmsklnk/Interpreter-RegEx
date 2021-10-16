@@ -2,8 +2,8 @@ let [q] = (x|a)
 let [z] = [q]*a
 let [z1] = (x|y)*a
 
-let [a] = 1*2?
-let [b] = 1*2
+let [a] = 1
+let [b] = 1
 
 let [c] = [a]&[b]
 let [x] = isAcceptable "12" [c]

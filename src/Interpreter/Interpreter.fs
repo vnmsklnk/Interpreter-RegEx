@@ -101,6 +101,7 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
         | RE reVal -> pDict.["print"] <- (pDict.["print"] + reVal.ToString() + "\n")
         | Bool boolVal -> pDict.["print"] <- (pDict.["print"] + boolVal.ToString() + "\n")
         | Lst lValues -> pDict.["print"] <- (pDict.["print"] + lValues.ToString() + "\n")
+    
     | AST.VDecl (value, expr) ->
         if vDict.ContainsKey value then
             vDict.[value] <- processExpression vDict expr
@@ -113,11 +114,8 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
                 let mtxNFA =
                     regEx
                     |> regexToNFA
-                match File.Exists fullPath with
-                | false -> Error $"Specified file not found: {fullPath}"
-                | true ->
-                    toDot mtxNFA fullPath
-                    Ok $"printToDot: written to {fullPath}"
+                toDot mtxNFA fullPath
+                Ok $"printToDot: written to {fullPath}"
             | _ as other -> Error $"Error: 'printToDot' 1 arg. should be a var with regex; instead got: %A{other}"
         
         match (processVar vDict.[var] path) with

@@ -93,8 +93,8 @@ let epsClosure (atm: MatrixNFA<_>) =
     epsCls.tree
     |> MutableQT.iteri
         (fun i j x ->
-            if x.Contains Eps && atm.Final.Contains(int j) then
-                newFinals.Add(int i) |> ignore)
+            if x.Contains Eps && atm.Final.Contains(j) then
+                newFinals.Add(i) |> ignore)
 
     newFinals.UnionWith atm.Final
 
@@ -116,8 +116,8 @@ let epsClosure (atm: MatrixNFA<_>) =
     reachable.tree
     |> MutableQT.iteri
         (fun i j x ->
-            if x && atm.Start.Contains(int i) then
-                reachableFromStart.Add(int j) |> ignore)
+            if x && atm.Start.Contains(i) then
+                reachableFromStart.Add(j) |> ignore)
 
     reachableFromStart.UnionWith atm.Start
 
@@ -147,33 +147,31 @@ let epsClosure (atm: MatrixNFA<_>) =
         
     res
 
-
+let intersect (nfaA: MatrixNFA<_>) (nfaB: MatrixNFA<_>) =
+    MatrixAlgebra.kroneckerProduct
+            (epsSmbSetSR())
+            nfaA.Transitions
+            nfaB.Transitions
+    
+let getProjection (intersection: SparseMtx<HashSet<NFASmb<'a>>>) =
+        intersection
+        |> SparseMtx.map booleanOps (fun s -> s.Count > 0)
+    
 let accept (nfa: MatrixNFA<_>) (input: list<_>) =
     let matchingStrNFA = seqToAtm input
-
-    let intersection =
-        MatrixAlgebra.kroneckerProduct
-            (epsSmbSetSR())
-            matchingStrNFA.Transitions
-            nfa.Transitions
-            
+    let intersection = intersect matchingStrNFA nfa
     let newStartState =
         [ for s1 in matchingStrNFA.Start do
-            for s2 in nfa.Start do
-                s1 * nfa.Transitions.size + s2 ]
-        |> HashSet<_>
-
+                for s2 in nfa.Start do
+                    s1 * nfa.Transitions.size + s2 ]
+            |> HashSet<_>       
     let newFinalStates =
         [ for s1 in matchingStrNFA.Final do
             for s2 in nfa.Final do
-                s1 * nfa.Transitions.size + s2 ]
-
-    let projected =
-        intersection
-        |> SparseMtx.map booleanOps (fun s -> s.Count > 0)
-
-    let reachability =
-        MatrixAlgebra.closure booleanSR id projected
+                 s1 * nfa.Transitions.size + s2 ]
+        
+    let projected = getProjection intersection
+    let reachability = MatrixAlgebra.closure booleanSR id projected
 
     let result =
         newFinalStates
@@ -190,8 +188,7 @@ let accept (nfa: MatrixNFA<_>) (input: list<_>) =
 
 let findAll (nfa: MatrixNFA<_>) (input: list<_>) =
     let nfa2 = seqToAtm input
-    let intersection =
-        MatrixAlgebra.kroneckerProduct (epsSmbSetSR()) nfa2.Transitions nfa.Transitions
+    let intersection = intersect nfa2 nfa
 
     let newStartState =
         [ for s1 in 0 .. nfa2.Transitions.size - 1 do
@@ -204,12 +201,8 @@ let findAll (nfa: MatrixNFA<_>) (input: list<_>) =
               for s2 in nfa.Final do
                   yield s1 * nfa.Transitions.size + s2 ]
 
-    let projected =
-        intersection
-        |> SparseMtx.map booleanOps (fun s -> s.Count > 0)
-
-    let reachability =
-        MatrixAlgebra.closure booleanSR id projected
+    let projected = getProjection intersection
+    let reachability = MatrixAlgebra.closure booleanSR id projected
 
     [ for s1 in newFinalStates do
           for s2 in newStartState do
