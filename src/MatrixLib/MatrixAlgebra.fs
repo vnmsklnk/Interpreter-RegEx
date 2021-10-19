@@ -4,7 +4,6 @@ open System
 open System.Collections.Generic
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT
-
 open MatrixLib.Operators
 open MatrixLib.AlgStructs
 open MatrixLib.SparseMtx
@@ -182,11 +181,7 @@ module MatrixAlgebra =
         loop mtxA.tree mtxB.tree
         SparseMtx(tree, Operators(sr.zero, sr.eq))
         
-    let kroneckerProduct (sr: Semiring<_>) (mtxA: SparseMtx<HashSet<_>>) (mtxB: SparseMtx<HashSet<_>>) =
-        let multiplicationSets (s1:HashSet<_>) (s2: HashSet<_>) =
-            let res = HashSet<_>(s1) in res.IntersectWith s2
-            res
-
+    let kroneckerProduct (sr: Semiring<_>) (mtxA: SparseMtx<_>) (mtxB: SparseMtx<_>) =
         let X1, Y1 =
             mtxA.tree.Region.SizeX,
             mtxA.tree.Region.SizeY
@@ -202,37 +197,27 @@ module MatrixAlgebra =
             for j in 0..columns - 1 do
                 let first = mtxA.[i / mtxB.size, j / mtxB.size ]
                 let second = mtxB.[i % mtxB.size, j % mtxB.size]
-                let kek = multiplicationSets first second
-                res.[i, j] <- kek
-        res
+                res.[i, j] <- sr.mul first second
+        res    
     
-    let isEqual x = raise (NotImplementedException())    // TODO: implement
-    
-    let closure sr condition (mtx: SparseMtx<_>) =
-        let count cond (mtx': SparseMtx<_>) =
-            let mutable count = 0
-
-            mtx'
-            |> SparseMtx.iter
-                (fun elem ->
-                    if cond elem then
-                        count <- count + 1)
-
-            count
-
+    let closure' sr (mtx: SparseMtx<_>) =
+        let mutable prev = mtx
         let mutable result = mtx
         let mutable _continue = true
 
         while _continue do
-            let prev = count condition result
-            let multiplied = multiply sr result result
-            
+            let multiplied = multiply sr result result           
             let added = (sum sr result multiplied)
             result <- added
-            let current =
-                count condition added
-            
-            if prev = current then
-                _continue <- false
-
+            if SparseMtx.isEqual prev result then _continue <- false
+            else prev <- result
+        result
+        
+    let closure sr (mtx: SparseMtx<_>) =
+        let mutable n = 0
+        let mutable result = mtx
+        while n < mtx.size do
+            let multiplied = multiply sr result result
+            result <- sum sr result multiplied
+            n <- n + 1
         result

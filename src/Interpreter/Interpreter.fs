@@ -4,7 +4,6 @@ open System.Collections.Generic
 open System.IO
 open Interpreter.FiniteAutomata
 open FSharp.Text.Lexing
-open Interpreter.Automata
 open MatrixLib.SparseMtx
 
 let private newDataToConsole = Event<string>()

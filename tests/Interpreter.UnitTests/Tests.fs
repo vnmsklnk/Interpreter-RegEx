@@ -2,7 +2,6 @@ module Tests
 open System.Collections.Generic
 open Interpreter.Symbols
 open Interpreter.FiniteAutomata
-open Interpreter.Automata
 open Interpreter.Interpreter
 open Expecto
 

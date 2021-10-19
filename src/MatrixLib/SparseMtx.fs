@@ -1,5 +1,6 @@
 ﻿namespace MatrixLib.SparseMtx
 
+open MatrixLib.AlgStructs
 open Quadtrees.QtTypes
 open Quadtrees.Utils
 open Quadtrees.QtTypes.MatrixCell
@@ -163,7 +164,8 @@ module SparseMtx =
         let resArray = Array2D.create mtx.size mtx.size (mtx.ops.getZero())
         iteri (fun x y elem -> resArray.[x, y] <- elem) mtx
         resArray
-        
+
+    /// Returns matrix of 2X size
     let doubleSize (mtx: SparseMtx<_>) =
         let reg = mtx.tree.Region :?> MatrixCell
         let newRegion = MatrixCell (reg.size * 2)
@@ -177,3 +179,37 @@ module SparseMtx =
         let _NW = makeTree mtx.tree.Region mtx.tree.Content 
         let newTree = Nodes(_NW, _NE, _SW, _SE) |> makeTree newRegion
         SparseMtx(newTree, mtx.ops)
+        
+    /// Equality of two sparse matrices
+    let isEqual (mtx1: SparseMtx<'a>) (mtx2: SparseMtx<'a>) =
+        let cond1 = mtx1.ops.EqualToZero (mtx2.ops.getZero())
+        let cond2 = mtx2.ops.EqualToZero (mtx1.ops.getZero())
+        if not (cond1 && cond2)
+        then failwith "Impossible to equalize matrices with different operators"
+        
+        let rec _go qt1 qt2 =
+            match qt1.Content, qt2.Content with
+            | Empty, Empty -> true
+            | Empty, _ | _, Empty -> false
+            | Leaf (p1, v1), Leaf (p2, v2) -> p1 = p2 && (mtx1.ops.equal v1 v2)
+            | Nodes (nw1, ne1, sw1, se1), Nodes (nw2, ne2, sw2, se2) ->
+                _go nw1 nw2
+                && _go ne1 ne2
+                && _go sw1 sw2
+                && _go se1 se2
+            | Leaf (p1, v1), Nodes (nw2, ne2, sw2, se2) ->
+                let nw1, ne1, sw1, se1 = MutableQT.subdivideLeaf (p1, v1) qt1
+                _go nw1 nw2
+                && _go ne1 ne2
+                && _go sw1 sw2
+                && _go se1 se2
+            | Nodes (nw1, ne1, sw1, se1), Leaf (p2, v2) ->
+                let nw2, ne2, sw2, se2 = MutableQT.subdivideLeaf (p2, v2) qt2
+                _go nw1 nw2
+                && _go ne1 ne2
+                && _go sw1 sw2
+                && _go se1 se2
+            
+        match mtx1.size <> mtx2.size with
+        | true -> false
+        | false -> _go mtx1.tree mtx2.tree

@@ -30,7 +30,6 @@
         <Compile Include="Lexer.fs" />
         <Compile Include="Symbols.fs" />
         <Compile Include="FiniteAutomata.fs" />
-        <Compile Include="Automata.fs" />
         <Compile Include="Interpreter.fs" />
         <Compile Include="RegexpParser.fs" />
         <Compile Include="AstToDot.fs" />
