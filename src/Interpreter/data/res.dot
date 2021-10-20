@@ -1,0 +1,155 @@
+digraph G {
+x1 [shape = ellipse, label = "VDecl"];
+
+x2 [shape = ellipse, label = "q"];
+
+	"x0" -> "x1";
+
+	"x0" -> "x2";
+
+x2 [shape = ellipse, label = "Regex.Alt"];
+
+	"x0" -> "x2";
+
+x3 [shape = ellipse, label = "x"];
+
+x4 [shape = ellipse, label = "a"];
+
+"x2" -> "x3";
+
+	"x2" -> "x4";
+
+x2 [shape = ellipse, label = "VDecl"];
+
+x3 [shape = ellipse, label = "z"];
+
+	"x0" -> "x2";
+
+	"x0" -> "x3";
+
+x3 [shape = ellipse, label = "Regex.Star"];
+
+	"x0" -> "x3";
+
+x4 [shape = ellipse, label = "a"];
+
+x3 [shape = ellipse, label = "VDecl"];
+
+x4 [shape = ellipse, label = "z1"];
+
+	"x0" -> "x3";
+
+	"x0" -> "x4";
+
+x4 [shape = ellipse, label = "AST.IsAcceptable"];
+
+x5 [shape = ellipse, label = "a"];
+
+	"x0" -> "x4";
+
+	"x0" -> "x5";
+
+x6 [shape = ellipse, label = "Regex.Intersect"];
+
+	"x4" -> "x6";
+
+x7 [shape = ellipse, label = "Regex.RVar"];
+
+x8 [shape = ellipse, label = "q"];
+
+	"x6" -> "x7";
+
+	"x6" -> "x8";
+
+x8 [shape = ellipse, label = "Regex.RVar"];
+
+x9 [shape = ellipse, label = "z"];
+
+	"x6" -> "x8";
+
+	"x6" -> "x9";
+
+	"x6" -> "x7";
+
+	"x6" -> "x8";
+
+	"x0" -> "x6";
+
+x4 [shape = ellipse, label = "VDecl"];
+
+x5 [shape = ellipse, label = "x"];
+
+	"x0" -> "x4";
+
+	"x0" -> "x5";
+
+x5 [shape = ellipse, label = "AST.IsAcceptable"];
+
+x6 [shape = ellipse, label = "1"];
+
+	"x0" -> "x5";
+
+	"x0" -> "x6";
+
+x7 [shape = ellipse, label = "Regex.Intersect"];
+
+	"x5" -> "x7";
+
+x8 [shape = ellipse, label = "Regex.Star"];
+
+	"x7" -> "x8";
+
+x9 [shape = ellipse, label = "1"];
+
+x9 [shape = ellipse, label = "Regex.Opt"];
+
+	"x7" -> "x9";
+
+x10 [shape = ellipse, label = "1"];
+
+	"x7" -> "x8";
+
+	"x7" -> "x9";
+
+	"x0" -> "x7";
+
+x5 [shape = ellipse, label = "Print"];
+
+x6 [shape = ellipse, label = "x"];
+
+	"x0" -> "x5";
+
+	"x0" -> "x6";
+
+x6 [shape = ellipse, label = "Print"];
+
+x7 [shape = ellipse, label = "z1"];
+
+	"x0" -> "x6";
+
+	"x0" -> "x7";
+
+x7 [shape = ellipse, label = "PrintToDot"];
+
+x8 [shape = ellipse, label = "q"];
+
+x9 [shape = ellipse, label = "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res1.dot"];
+
+	"x0" -> "x7";
+
+	"x0" -> "x8";
+
+	"x0" -> "x9";
+
+x8 [shape = ellipse, label = "PrintToDot"];
+
+x9 [shape = ellipse, label = "z"];
+
+x10 [shape = ellipse, label = "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res2.dot"];
+
+	"x0" -> "x8";
+
+	"x0" -> "x9";
+
+	"x0" -> "x10";
+}

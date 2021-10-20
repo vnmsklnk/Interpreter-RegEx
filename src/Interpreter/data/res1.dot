@@ -1,0 +1,19 @@
+digraph nfa
+{
+rankdir = LR
+node [shape = circle];
+4[shape = circle, label = "4_Start"]
+0 -> 1 [label = "x"]
+
+2 -> 3 [label = "a"]
+
+1 -> 5 [label = "Eps"]
+
+3 -> 5 [label = "Eps"]
+
+4 -> 0 [label = "Eps"]
+
+4 -> 2 [label = "Eps"]
+
+5[shape = doublecircle]
+}
