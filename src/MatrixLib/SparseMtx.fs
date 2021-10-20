@@ -1,11 +1,8 @@
-﻿namespace MatrixLib.SparseMtx
+﻿module MatrixLib.SparseMtx
 
-open MatrixLib.AlgStructs
-open Quadtrees.QtTypes
 open Quadtrees.Utils
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT
-open MatrixLib.Operators
 
 /// Square sparse matrix implemented on quadtrees;
 /// This implementation uses quadtrees

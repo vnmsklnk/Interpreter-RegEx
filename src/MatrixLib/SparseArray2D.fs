@@ -2,7 +2,6 @@ module MatrixLib.SparseArray2D
 
 open System
 open System.Threading.Tasks
-open MatrixLib.AlgStructs
 
 module SparseArray2D =
     let getBounds (matrix: 'a [,]) =
@@ -96,7 +95,7 @@ module SparseArray2D =
 
         result
 
-    // todo: what is actually going on here ?
+    
     let closure (sr: Semiring<'a>) predicateFunc (matrix: 'a [,]) =
         let countWhich cond (mat: 'a [,]) =
             let mutable counter = 0

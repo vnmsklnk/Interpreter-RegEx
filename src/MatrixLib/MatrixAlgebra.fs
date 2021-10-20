@@ -1,23 +1,19 @@
-namespace MatrixLib.MatrixAlgebra
+module MatrixLib.MatrixAlgebra
 
-open System
-open System.Collections.Generic
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT
-open MatrixLib.Operators
-open MatrixLib.AlgStructs
 open MatrixLib.SparseMtx
     
 module MatrixAlgebra =
     let sum (sr: Semiring<_>) (mtx1: SparseMtx<_>) (mtx2: SparseMtx<_>) = 
         let res =
             MutableQT.sum
-                (equalityToZero sr, sr.add) mtx1.tree mtx2.tree
+                (Structures.equalityToZero sr, sr.add) mtx1.tree mtx2.tree
         
-        SparseMtx(res, toOps sr.zero sr.eq)
+        SparseMtx(res, Structures.toOps sr.zero sr.eq)
 
     let multiply (sr: Semiring<_>) (mtx1: SparseMtx<_>) (mtx2: SparseMtx<_>) =
-        let ops = equalityToZero sr, sr.add
+        let ops = Structures.equalityToZero sr, sr.add
         // recursive multiply of square region quadtree
         let rec loop curr qt1 qt2 =
             /// Multiplication of subtrees
@@ -76,7 +72,7 @@ module MatrixAlgebra =
         SparseMtx (resultTree, Operators(sr.zero, sr.eq))
 
     let multiplyParallel (sr: Semiring<_>) depth (mtx1: SparseMtx<_>) (mtx2: SparseMtx<_>) =
-        let ops = equalityToZero sr, sr.add
+        let ops = Structures.equalityToZero sr, sr.add
         // recursive multiply of square region quadtree
         let rec loop (curr, count) qt1 qt2 =
             /// Parallel multiplication of subtrees
@@ -146,7 +142,7 @@ module MatrixAlgebra =
         
         let cell = cellsCanBeMultiplied cell1 cell2
         let resultTree = loop (cell, 0) mtx1.tree mtx2.tree
-        SparseMtx (resultTree, toOps sr.zero sr.eq)
+        SparseMtx (resultTree, Structures.toOps sr.zero sr.eq)
     
     open Quadtrees.Utils
     
@@ -190,9 +186,8 @@ module MatrixAlgebra =
             mtxB.tree.Region.SizeX,
             mtxB.tree.Region.SizeY
 
-        let rows = int (X1 * X2)
-        let columns = int (Y1 * Y2)
-        let mutable res = SparseMtx(emptyTree (MatrixCell(rows)), getOps sr)
+        let rows, columns = X1 * X2, Y1 * Y2
+        let mutable res = SparseMtx(emptyTree (MatrixCell(rows)), Structures.getOps sr)
         for i in 0..rows - 1 do
             for j in 0..columns - 1 do
                 let first = mtxA.[i / mtxB.size, j / mtxB.size ]
@@ -200,7 +195,8 @@ module MatrixAlgebra =
                 res.[i, j] <- sr.mul first second
         res    
     
-    let closure' sr (mtx: SparseMtx<_>) =
+    /// Returns transitive closure of sparse matrix
+    let closure sr (mtx: SparseMtx<_>) =
         let mutable prev = mtx
         let mutable result = mtx
         let mutable _continue = true
@@ -211,13 +207,4 @@ module MatrixAlgebra =
             result <- added
             if SparseMtx.isEqual prev result then _continue <- false
             else prev <- result
-        result
-        
-    let closure sr (mtx: SparseMtx<_>) =
-        let mutable n = 0
-        let mutable result = mtx
-        while n < mtx.size do
-            let multiplied = multiply sr result result
-            result <- sum sr result multiplied
-            n <- n + 1
         result

@@ -10,7 +10,7 @@ type Regex =
     | Seq of Regex * Regex
     | Opt of Regex
     | Star of Regex
-    | Intersect of Regex * Regex // todo: implement
+    | Intersect of Regex * Regex
 
 /// Operations on regex
 type Expr =

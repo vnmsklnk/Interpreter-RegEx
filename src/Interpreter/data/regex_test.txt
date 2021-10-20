@@ -1,15 +1,11 @@
 let [q] = (x|a)
-let [z] = [q]*a
-let [z1] = (x|y)*a
+let [z] = a*
+let [z1] = isAcceptable "a" [q]&[z]
 
-let [a] = (1|2)*
-let [b] = 1*2*
-
-let [c] = [a]&[b]
-let [x] = isAcceptable "12" [c]
-
-printToDot [a] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotA.dot"
-printToDot [b] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotB.dot"
-printToDot [c] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/AstToDotRes.dot"
+let [x] = isAcceptable "1" (1*)&(1?)
 
 print [x]
+print [z1]
+
+printToDot [q] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res1.dot"
+printToDot [z] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res2.dot"

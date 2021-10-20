@@ -1,53 +1,16 @@
 module Quadtrees.UnitTests.MainTests
 
-open System
-open Expecto    // Test Framework
-open MatrixLib.AlgStructs   // Semirings
-open MatrixLib.Operators
-open Quadtrees.Utils
-open MatrixLib.MatrixAlgebra
+open Expecto // Test Framework
+open MatrixLib // Semirings and operators
 open MatrixLib.SparseArray2D // Array2D functions for comparison
 open MatrixLib.SparseMtx // Sparse matrix functions
+open MatrixLib.MatrixAlgebra
 
-let intSemiring = CommonSR.intSR
-let intOps = CommonOps.intOps
+let intSemiring = Semirings.intSR
+let intOps = Operators.intOps
 
 let tests =
     testSequenced <| testList "Math operations on quadtrees" [
-//        testProperty "Array 2D closure equals closure on QuadTrees" <| fun (size: int) ->
-//            let size = (Math.Abs size + 1) |> toNextPowerOfTwo
-//            
-//            if 4 < size && size < 32 then
-//                let randMatrix = SparseArray2D.genIntMatrix (size, size) 0.5               
-//                let sparse = SparseMtx(randMatrix, intOps)
-//                
-//                let expected = SparseArray2D.closure intSemiring (fun x -> x > 0) randMatrix
-//                let resSparse = MatrixAlgebra.closure intSemiring sparse
-//                
-//                let actual = SparseMtx.toArray2D resSparse
-//                Expect.equal actual expected ""
-//                    
-//        testCase "Closure testCase" <| fun () ->
-//            let matrix = array2D [|
-//                    [|0; 1; 564; 5|]
-//                    [|1; 28; 1; 6|]
-//                    [|1; 5; 1; 8|]
-//                    [|1; 8; 1; 6|]
-//                |]
-//            
-//            let matrix' = array2D [|
-//                    [|0; 1; 564; 5|]
-//                    [|1; 28; 1; 6|]
-//                    [|1; 5; 1; 8|]
-//                    [|1; 8; 1; 6|]
-//                |]
-//            
-//            let expected = SparseArray2D.closure intSemiring (fun x -> x > 0) matrix
-//            let sparse = SparseMtx(matrix', intOps)       
-//            let resSparse = MatrixAlgebra.closure intSemiring sparse
-//            let actual = SparseMtx.toArray2D resSparse
-//            Expect.equal actual expected ""
-            
         let helperMult (matrixA: int[,]) (matrixB: int[,]) =
             let sparseA = SparseMtx(matrixA, intOps)
             let sparseB = SparseMtx(matrixB, intOps)
