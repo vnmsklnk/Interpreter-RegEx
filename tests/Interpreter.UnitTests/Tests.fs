@@ -24,7 +24,15 @@ let thirdAtm =
 
 let fourthAtm =
     // (a|b)*c
-    (Seq (Star (Alt (RSmb 'a', RSmb 'b')), RSmb 'c')) |> makeAtm   
+    (Seq (Star (Alt (RSmb 'a', RSmb 'b')), RSmb 'c')) |> makeAtm
+    
+let fifthAtm =
+    // (1*)&(1|0)
+    (Intersect (Star (RSmb '1'), Alt (RSmb '1', RSmb '0'))) |> makeAtm
+    
+let sixthAtm =
+    // (1|0)&(1|2)
+    (Intersect (Alt (RSmb '1', RSmb '0'), Alt (RSmb '1', RSmb '2'))) |> makeAtm
 
 let prepareStr (str: string) =
     str.ToCharArray() |> List.ofArray
@@ -37,33 +45,48 @@ let testString3 = "ababa" |> prepareStr
 
 let testString4 = "babac" |> prepareStr
 
+let testString5 = "1" |> prepareStr
+let testString6 = "12" |> prepareStr
+
 
 [<Tests>]
 let testATM =
     testList "ATMs functions" [
         testCase "accept 12122 by (1, 2)*" <| fun _ ->
-            Expect.equal (accept fstAtm testString1) true ""
+            Expect.isTrue (accept fstAtm testString1) ""
 
         testCase "accept 12122 by (1, 2)* + 3" <| fun _ ->
-            Expect.equal (accept sndAtm testString1) false ""
+            Expect.isFalse (accept sndAtm testString1) ""
 
         testCase "accept 21213 by (1, 2)*" <| fun _ ->
-            Expect.equal (accept fstAtm testString2) false ""
+            Expect.isFalse (accept fstAtm testString2) ""
 
         testCase "accept 21213 by (1, 2)* + 3" <| fun _ ->
-            Expect.equal (accept sndAtm testString2) true ""
+            Expect.isTrue (accept sndAtm testString2) ""
                     
         testCase "accept ababa by (a, b)*" <| fun _ ->
-            Expect.equal (accept thirdAtm testString3) true ""
+            Expect.isTrue (accept thirdAtm testString3) ""
 
         testCase "accept ababa by (a, b)* + c" <| fun _ ->
-            Expect.equal (accept fourthAtm testString3) false ""
+            Expect.isFalse (accept fourthAtm testString3) ""
 
         testCase "accept babac by (a, b)*" <| fun _ ->
-            Expect.equal (accept thirdAtm testString4) false ""
+            Expect.isFalse (accept thirdAtm testString4) ""
 
         testCase "accept babac by (a, b)* + c" <| fun _ ->
-            Expect.equal (accept fourthAtm testString4) true ""
+            Expect.isTrue (accept fourthAtm testString4) ""
+        
+        testCase "accept 1 by (1*)&(1|0)" <| fun _ ->
+            Expect.isTrue (accept fifthAtm testString5) ""
+            
+        testCase "accept 12 by (1*)&(1|0)" <| fun _ ->
+            Expect.isFalse (accept fifthAtm testString6) ""
+            
+        testCase "accept 1 by (1|0)&(1|2)" <| fun _ ->
+            Expect.isTrue (accept sixthAtm testString5) ""
+            
+        testCase "accept 12 by (1|0)&(1|2)" <| fun _ ->
+            Expect.isFalse (accept sixthAtm testString6) ""
     ]
 
 let calculate (ast: AST.Stmt list) =
