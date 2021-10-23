@@ -1,5 +1,4 @@
 ﻿module Interpreter.FiniteAutomata
-
 open System.Collections.Generic
 open Interpreter.Symbols
 open MatrixLib

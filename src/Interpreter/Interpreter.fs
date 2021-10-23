@@ -1,10 +1,8 @@
 module Interpreter.Interpreter
 open Interpreter.Symbols
-open System.Collections.Generic
-open System.IO
 open Interpreter.FiniteAutomata
+open System.Collections.Generic
 open FSharp.Text.Lexing
-open MatrixLib.SparseMtx
 
 let private newDataToConsole = Event<string>()
 
@@ -83,6 +81,8 @@ let processExpression vDict expression =
     | AST.IsAcceptable (str, re) -> Bool(accept (makeAtm re) (str.ToCharArray() |> List.ofArray))
     | AST.RegExp re -> RE(processRegExp vDict re)
 
+let printConst = "print"
+
 let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) stmt =
     match stmt with
     | AST.Print value ->
@@ -97,9 +97,9 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
                 failwithf $"Variable %A{value} is not declared."
 
         match varData with
-        | RE reVal -> pDict.["print"] <- (pDict.["print"] + reVal.ToString() + "\n")
-        | Bool boolVal -> pDict.["print"] <- (pDict.["print"] + boolVal.ToString() + "\n")
-        | Lst lValues -> pDict.["print"] <- (pDict.["print"] + lValues.ToString() + "\n")
+        | RE reVal -> pDict.[printConst] <- (pDict.[printConst] + reVal.ToString() + "\n")
+        | Bool boolVal -> pDict.[printConst] <- (pDict.[printConst] + boolVal.ToString() + "\n")
+        | Lst lValues -> pDict.[printConst] <- (pDict.[printConst] + lValues.ToString() + "\n")
     
     | AST.VDecl (value, expr) ->
         if vDict.ContainsKey value then
@@ -130,7 +130,7 @@ let run statements =
     let vDict = Dictionary<_, _>()
     let pDict = Dictionary<_, _>()
     let varDict = Dictionary<_, _>()
-    pDict.Add("print", "")
+    pDict.Add(printConst, "")
 
     let vD, _pD =
         List.fold (fun (d1, d2) -> processStmt d1 d2) (vDict, pDict) statements

@@ -1,4 +1,4 @@
-let [q] = (x|a)
+let [q] = (x|a)a
 let [z] = a*
 let [z1] = isAcceptable "a" [q]&[z]
 
