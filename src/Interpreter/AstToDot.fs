@@ -7,19 +7,34 @@ let makeTransition fromId toId =
     $"\t\"x%d{fromId}\" -> \"x%d{toId}\";\n"
         
 let astToDot outPath (program: AST.Program) =
-    
-    let helper currId parentId =
-        let varCall = makeLabel currId "Regex.RVar"
-        let toThis = makeTransition parentId currId
         
-        ()
-        
-        
-    
     let procStatement (parentId: int, currId: int) (stmt: AST.Stmt) =
-        let mutable currId = currId
+        let mutable currId = currId        
         
         let rec processRE parentId expr: string =
+            let helperOneRegex str regex =
+                let label = makeLabel currId str
+                let toThis = makeTransition parentId currId
+                let parent = currId
+                
+                currId <- currId + 1
+                let next = processRE parent regex
+                
+                String.concat "\n" [label; toThis; next]
+                
+            let helperTwoRegexes str regex1 regex2 =
+                let label = makeLabel currId str
+                let toThis = makeTransition parentId currId
+                let parent = currId
+                
+                currId <- currId + 1
+                let first = processRE parent regex1
+                
+                currId <- currId + 1
+                let second = processRE parent regex2
+                
+                String.concat "\n" [label; toThis; first; second]
+                
             match expr with
             | AST.RSmb symbol ->
                 let rSmb = makeLabel currId (string symbol)
@@ -39,61 +54,19 @@ let astToDot outPath (program: AST.Program) =
                 String.concat "\n" [toThis; varCall; varName; transL]
             
             | AST.Opt regex ->
-                let optLabel = makeLabel currId "Regex.Opt"
-                let toThis = makeTransition parentId currId
-                let parent = currId
-                
-                currId <- currId + 1
-                let next = processRE parent regex
-                
-                String.concat "\n" [optLabel; toThis; next]
-            
+                helperOneRegex "Regex.Opt" regex
+
             | AST.Star regex ->
-                let starLabel = makeLabel currId "Regex.Star"
-                let toThis = makeTransition parentId currId
-                let parent = currId
-                
-                currId <- currId + 1
-                let next = processRE parent regex
-                String.concat "\n" [starLabel; toThis; next]
+                helperOneRegex "Regex.Star" regex
             
             | AST.Seq (regex1, regex2) ->
-                let seqLabel = makeLabel currId "Regex.Seq"
-                let toThis = makeTransition parentId currId
-                let parent = currId
-                
-                currId <- currId + 1
-                let first = processRE parent regex1
-                
-                currId <- currId + 1
-                let second = processRE parent regex2
-                
-                String.concat "\n" [seqLabel; toThis; first; second]
+                helperTwoRegexes "Regex.Seq" regex1 regex2
                 
             | AST.Alt (regex1, regex2) ->
-                let alt = makeLabel currId "Regex.Alt"
-                let toThis = makeTransition parentId currId
-                let parent = currId
-                
-                currId <- currId + 1
-                let first = processRE parent regex1
-                
-                currId <- currId + 1
-                let second = processRE parent regex2
-                
-                String.concat "\n" [alt; toThis; first; second]
+                helperTwoRegexes "Regex.Alt" regex1 regex2
             
             | AST.Intersect (regex1, regex2) ->
-                let intersect = makeLabel currId "Regex.Intersect"
-                let toThis = makeTransition parentId currId
-                let parent = currId
-                
-                currId <- currId + 1
-                let first = processRE parent regex1
-                
-                currId <- currId + 1
-                let second = processRE parent regex2
-                String.concat "\n" [intersect; toThis; first; second]
+                helperTwoRegexes "Regex.Intersect" regex1 regex2
         
         match stmt with
         | AST.PrintToDot (AST.Var name, pathString) ->
@@ -145,9 +118,9 @@ let astToDot outPath (program: AST.Program) =
                     let trans1 = makeTransition parent _parent
                     let trans2 = makeTransition _parent (_parent + 1)
                     currId <- currId + 1
-                    let exprId = currId
+                    let temp = currId
                     let expression = processRE _parent exp
-                    let trans3 = makeTransition _parent exprId
+                    let trans3 = makeTransition _parent temp
                     String.concat "\n" [findAll; strLabeled; trans1; trans2; expression; trans3]
                 
                 | AST.IsAcceptable (str, exp) ->

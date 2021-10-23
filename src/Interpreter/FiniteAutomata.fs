@@ -30,7 +30,7 @@ type MatrixNFA<'t> =
           transitions = transitions }
     
 let private intersect matrixA matrixB =
-    MatrixAlgebra.kroneckerProduct'
+    MatrixAlgebra.kroneckerProduct
         Semirings.hashSetsSR<_>
         matrixA
         matrixB

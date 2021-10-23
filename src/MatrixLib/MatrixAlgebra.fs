@@ -146,7 +146,7 @@ module MatrixAlgebra =
     
     open Quadtrees.Utils
     
-    let kroneckerProduct' (sr: Semiring<_>) (mtxA: SparseMtx<_>) (mtxB: SparseMtx<_>) =
+    let kroneckerProduct (sr: Semiring<_>) (mtxA: SparseMtx<_>) (mtxB: SparseMtx<_>) =
         let X1, Y1 = getTreeBounds mtxA.tree
         let X2, Y2 = getTreeBounds mtxB.tree
         
@@ -175,25 +175,7 @@ module MatrixAlgebra =
             | _, Empty -> ()
 
         loop mtxA.tree mtxB.tree
-        SparseMtx(tree, Operators(sr.zero, sr.eq))
-        
-    let kroneckerProduct (sr: Semiring<_>) (mtxA: SparseMtx<_>) (mtxB: SparseMtx<_>) =
-        let X1, Y1 =
-            mtxA.tree.Region.SizeX,
-            mtxA.tree.Region.SizeY
-        
-        let X2, Y2 =
-            mtxB.tree.Region.SizeX,
-            mtxB.tree.Region.SizeY
-
-        let rows, columns = X1 * X2, Y1 * Y2
-        let mutable res = SparseMtx(emptyTree (MatrixCell(rows)), Structures.getOps sr)
-        for i in 0..rows - 1 do
-            for j in 0..columns - 1 do
-                let first = mtxA.[i / mtxB.size, j / mtxB.size ]
-                let second = mtxB.[i % mtxB.size, j % mtxB.size]
-                res.[i, j] <- sr.mul first second
-        res    
+        SparseMtx(tree, Operators(sr.zero, sr.eq))  
     
     /// Returns transitive closure of sparse matrix
     let closure sr (mtx: SparseMtx<_>) =
