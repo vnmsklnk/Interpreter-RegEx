@@ -11,7 +11,7 @@ let private makeSet (element: 'a) = HashSet<'a>(seq {element})
     
 let private first (hashSet: HashSet<_>) = hashSet |> seq |> Seq.head
 
-/// Adds element to HashSet taken from sparse matrix by index (i, j)
+/// Adds element to HashSet taken from sparse matrix by index (i, j).
 /// Returns updated hash set
 let private addTo (i, j) element (matrix: SparseMtx<HashSet<_>>) =
     let updated = HashSet(matrix.[i, j])

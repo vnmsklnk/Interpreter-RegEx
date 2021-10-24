@@ -1,155 +1,80 @@
 digraph G {
-x1 [shape = ellipse, label = "VDecl"];
-
-x2 [shape = ellipse, label = "q"];
-
+	x1 [shape = ellipse, label = "VDecl"];
+	x2 [shape = ellipse, label = "q"];
 	"x0" -> "x1";
-
-	"x0" -> "x2";
-
-x2 [shape = ellipse, label = "Regex.Alt"];
-
-	"x0" -> "x2";
-
-x3 [shape = ellipse, label = "x"];
-
-x4 [shape = ellipse, label = "a"];
-
-"x2" -> "x3";
-
-	"x2" -> "x4";
-
-x2 [shape = ellipse, label = "VDecl"];
-
-x3 [shape = ellipse, label = "z"];
-
-	"x0" -> "x2";
-
-	"x0" -> "x3";
-
-x3 [shape = ellipse, label = "Regex.Star"];
-
-	"x0" -> "x3";
-
-x4 [shape = ellipse, label = "a"];
-
-x3 [shape = ellipse, label = "VDecl"];
-
-x4 [shape = ellipse, label = "z1"];
-
-	"x0" -> "x3";
-
-	"x0" -> "x4";
-
-x4 [shape = ellipse, label = "AST.IsAcceptable"];
-
-x5 [shape = ellipse, label = "a"];
-
-	"x0" -> "x4";
-
-	"x0" -> "x5";
-
-x6 [shape = ellipse, label = "Regex.Intersect"];
-
-	"x4" -> "x6";
-
-x7 [shape = ellipse, label = "Regex.RVar"];
-
-x8 [shape = ellipse, label = "q"];
-
-	"x6" -> "x7";
-
-	"x6" -> "x8";
-
-x8 [shape = ellipse, label = "Regex.RVar"];
-
-x9 [shape = ellipse, label = "z"];
-
-	"x6" -> "x8";
-
-	"x6" -> "x9";
-
-	"x6" -> "x7";
-
-	"x6" -> "x8";
-
-	"x0" -> "x6";
-
-x4 [shape = ellipse, label = "VDecl"];
-
-x5 [shape = ellipse, label = "x"];
-
-	"x0" -> "x4";
-
-	"x0" -> "x5";
-
-x5 [shape = ellipse, label = "AST.IsAcceptable"];
-
-x6 [shape = ellipse, label = "1"];
-
-	"x0" -> "x5";
-
-	"x0" -> "x6";
-
-x7 [shape = ellipse, label = "Regex.Intersect"];
-
-	"x5" -> "x7";
-
-x8 [shape = ellipse, label = "Regex.Star"];
-
-	"x7" -> "x8";
-
-x9 [shape = ellipse, label = "1"];
-
-x9 [shape = ellipse, label = "Regex.Opt"];
-
-	"x7" -> "x9";
-
-x10 [shape = ellipse, label = "1"];
-
-	"x7" -> "x8";
-
-	"x7" -> "x9";
-
-	"x0" -> "x7";
-
-x5 [shape = ellipse, label = "Print"];
-
-x6 [shape = ellipse, label = "x"];
-
-	"x0" -> "x5";
-
-	"x0" -> "x6";
-
-x6 [shape = ellipse, label = "Print"];
-
-x7 [shape = ellipse, label = "z1"];
-
-	"x0" -> "x6";
-
-	"x0" -> "x7";
-
-x7 [shape = ellipse, label = "PrintToDot"];
-
-x8 [shape = ellipse, label = "q"];
-
-x9 [shape = ellipse, label = "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res1.dot"];
-
-	"x0" -> "x7";
-
-	"x0" -> "x8";
-
-	"x0" -> "x9";
-
-x8 [shape = ellipse, label = "PrintToDot"];
-
-x9 [shape = ellipse, label = "z"];
-
-x10 [shape = ellipse, label = "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res2.dot"];
-
-	"x0" -> "x8";
-
-	"x0" -> "x9";
-
-	"x0" -> "x10";
+	"x1" -> "x2";
+	"x1" -> "x3";
+	x3 [shape = ellipse, label = "Regex.Seq"];
+	"x3" -> "x4";
+	x4 [shape = ellipse, label = "Regex.Alt"];
+	"x4" -> "x5";
+	x5 [shape = ellipse, label = "x"];
+	"x4" -> "x7";
+	x7 [shape = ellipse, label = "a"];
+	"x3" -> "x9";
+	x9 [shape = ellipse, label = "a"];
+	x11 [shape = ellipse, label = "VDecl"];
+	x12 [shape = ellipse, label = "z"];
+	"x0" -> "x11";
+	"x11" -> "x12";
+	"x11" -> "x13";
+	x13 [shape = ellipse, label = "Regex.Star"];
+	"x13" -> "x14";
+	x14 [shape = ellipse, label = "a"];
+	x16 [shape = ellipse, label = "VDecl"];
+	x17 [shape = ellipse, label = "z1"];
+	"x0" -> "x16";
+	"x16" -> "x17";
+	x18 [shape = ellipse, label = "AST.IsAcceptable"];
+	x19 [shape = ellipse, label = "a"];
+	"x16" -> "x18";
+	"x18" -> "x19";
+	"x18" -> "x20";
+	x20 [shape = ellipse, label = "Regex.Intersect"];
+	"x20" -> "x21";
+	x21 [shape = ellipse, label = "Regex.RVar"];
+	x22 [shape = ellipse, label = "q"];
+	"x21" -> "x22";
+	"x20" -> "x23";
+	x23 [shape = ellipse, label = "Regex.RVar"];
+	x24 [shape = ellipse, label = "z"];
+	"x23" -> "x24";
+	x25 [shape = ellipse, label = "VDecl"];
+	x26 [shape = ellipse, label = "x"];
+	"x0" -> "x25";
+	"x25" -> "x26";
+	x27 [shape = ellipse, label = "AST.IsAcceptable"];
+	x28 [shape = ellipse, label = "1"];
+	"x25" -> "x27";
+	"x27" -> "x28";
+	"x27" -> "x29";
+	x29 [shape = ellipse, label = "Regex.Intersect"];
+	"x29" -> "x30";
+	x30 [shape = ellipse, label = "Regex.Star"];
+	"x30" -> "x31";
+	x31 [shape = ellipse, label = "1"];
+	"x29" -> "x33";
+	x33 [shape = ellipse, label = "Regex.Opt"];
+	"x33" -> "x34";
+	x34 [shape = ellipse, label = "1"];
+	"x0" -> "x36";
+	x36 [shape = ellipse, label = "Print"];
+	x37 [shape = ellipse, label = "x"];
+	"x36" -> "x37";
+	"x0" -> "x38";
+	x38 [shape = ellipse, label = "Print"];
+	x39 [shape = ellipse, label = "z1"];
+	"x38" -> "x39";
+	"x0" -> "x40";
+	x40 [shape = ellipse, label = "PrintToDot"];
+	x41 [shape = ellipse, label = "q"];
+	x42 [shape = ellipse, label = "/home/morph/Desktop/2021.10.23/Interpreter-RegEx/src/Interpreter/data/res1.dot"];
+	"x40" -> "x41";
+	"x40" -> "x42";
+	"x0" -> "x43";
+	x43 [shape = ellipse, label = "PrintToDot"];
+	x44 [shape = ellipse, label = "z"];
+	x45 [shape = ellipse, label = "/home/morph/Desktop/2021.10.23/Interpreter-RegEx/src/Interpreter/data/res2.dot"];
+	"x43" -> "x44";
+	"x43" -> "x45";
 }

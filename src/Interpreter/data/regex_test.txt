@@ -7,5 +7,5 @@ let [x] = isAcceptable "1" (1*)&(1?)
 print [x]
 print [z1]
 
-printToDot [q] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res1.dot"
-printToDot [z] "/home/ivan/Documents/Projects/Interpreter/src/Interpreter/data/res2.dot"
+printToDot [q] "/home/morph/Desktop/2021.10.23/Interpreter-RegEx/src/Interpreter/data/res1.dot"
+printToDot [z] "/home/morph/Desktop/2021.10.23/Interpreter-RegEx/src/Interpreter/data/res2.dot"
