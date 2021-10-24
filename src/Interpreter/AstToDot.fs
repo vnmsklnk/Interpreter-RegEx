@@ -136,5 +136,5 @@ let astToDot outPath (program: AST.Program) =
             let treeOfStmt, id = procStatement (0, id)  stmt
             _go (id + 1) (accList @ [ treeOfStmt ]) tail
     
-    let digraphBodyStr = _go 1 [] program
-    System.IO.File.WriteAllText(outPath, $"digraph G {{\n{ (String.concat "\n" digraphBodyStr) }\n}}")
+    let digraphBodyStr = _go 1 [] program |> String.concat "\n"
+    System.IO.File.WriteAllText(outPath, $"digraph G {{\n{ digraphBodyStr }\n}}")
