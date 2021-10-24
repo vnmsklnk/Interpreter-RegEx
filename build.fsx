@@ -91,6 +91,7 @@ Target.create "Build" (fun _ ->
 
 Target.create "Test" (fun _ ->
     exec "dotnet"  @"run --project .\tests\Interpreter.UnitTests\Interpreter.UnitTests.fsproj" "."
+    exec "dotnet"  @"run --project .\tests\Quadtrees.UnitTests\Quadtrees.UnitTests.fsproj" "."
 )
 
 Target.create "Docs" (fun _ ->

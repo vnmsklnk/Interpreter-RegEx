@@ -3,11 +3,14 @@ source https://api.nuget.org/v3/index.json
 storage: none
 framework: net50, netstandard2.0, netstandard2.1
 
-nuget FSharp.Core 5.0.0
+nuget FSharp.Core 5.0.2
 nuget Expecto
 nuget FsCheck 2.16.0 // 2.14.0 for net 3.1
 nuget Expecto.FsCheck
 nuget System.Runtime.Numerics
+nuget FsLexYacc 10.2.0
+nuget FsLexYacc.Runtime 10.2.0
+nuget Argu 6.1.1
 
 group Docs
   source https://api.nuget.org/v3/index.json
@@ -15,6 +18,7 @@ group Docs
   framework: netstandard2.0
   storage: symlink
 
+  nuget FSharp.Core 5.0.2
   nuget FSharp.Compiler.Service ~> 40.0.0 // 35.0 for net 3.1
   nuget FSharp.Formatting ~> 11.2.0 // 4.1 for net 3.1
   nuget Newtonsoft.Json
@@ -26,7 +30,7 @@ group Build
   framework: netstandard2.0
   storage: none
 
-  nuget FSharp.Core 5.0.0 // https://github.com/fsharp/FAKE/issues/2001
+  nuget FSharp.Core 5.0.2 // https://github.com/fsharp/FAKE/issues/2001
   nuget Fake.Core.Target
   nuget Fake.Core.Process
   nuget Fake.DotNet.Cli

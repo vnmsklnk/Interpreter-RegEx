@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    </PropertyGroup>
+    <ItemGroup>
+        <Compile Include="Utils.fs" />
+        <Compile Include="QtTypes\Direction.fs" />
+        <Compile Include="QtTypes\Region.fs" />
+        <Compile Include="QtTypes\SquareFloat.fs" />
+        <Compile Include="QtTypes\MatrixCell.fs" />
+        <Compile Include="MutableQT.fs" />
+    </ItemGroup>
+    <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
