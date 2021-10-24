@@ -31,7 +31,7 @@ let tests =
             let sparseA = SparseMtx(matrixA, intOps)
             let sparseB = SparseMtx(matrixB, intOps)
             let expected = SparseArray2D.kroneckerProduct intSemiring matrixA matrixB
-            let resSparse = MatrixAlgebra.kroneckerProduct' intSemiring sparseA sparseB
+            let resSparse = MatrixAlgebra.kroneckerProduct intSemiring sparseA sparseB
             let actual = SparseMtx.toArray2D resSparse
             actual, expected
         
