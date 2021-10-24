@@ -19,6 +19,13 @@
       "commands": [
         "fornax"
       ]
+      
+    },
+    "dotnet-fsharplint": {
+      "version": "0.19.2",
+      "commands": [
+        "dotnet-fsharplint"
+      ]
     }
   }
 }

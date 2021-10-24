@@ -115,7 +115,7 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
                     |> regexToNFA
                 toDot mtxNFA fullPath
                 Ok $"printToDot: written to {fullPath}"
-            | _ as other -> Error $"Error: 'printToDot' 1 arg. should be a var with regex; instead got: %A{other}"
+            | other -> Error $"Error: 'printToDot' 1 arg. should be a var with regex; instead got: %A{other}"
         
         match (processVar vDict.[var] path) with
         | Ok msg -> printfn $"%A{msg}" 
