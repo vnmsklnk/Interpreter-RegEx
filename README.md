@@ -26,9 +26,9 @@ You can install the package with dotnet by following this steps:
 
 ## Usage and Examples
 
-Each regular expression is defined as variable which can be used in other expressions. Typical program consists of statements with expressions and variable's names associated with them.
+Each regular expression is defined as variable which can be used in other expressions. Typical program consists of statements with expressions and variables' names associated with them.
 
-There are only three statements supported in this language:
+Three statements are supported:
 
 	let [var] = expr # Variable declaration, var is name of variable which consists of 'a' - 'z', 'A' - 'Z', '0' - '9' symbols
 	print [var] # Statement for outputting variables
