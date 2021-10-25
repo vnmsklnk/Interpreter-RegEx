@@ -1,6 +1,5 @@
 site_name: Interpreter RegEx
 theme:
   name: material
-remote_name: docs
 docs_dir: docsSrc
 site_dir: docs
