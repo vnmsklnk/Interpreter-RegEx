@@ -31,8 +31,8 @@ Each regular expression is defined as variable which can be used in other expres
 There are only three statements supported in this language:
 
 	let [var] = expr # Variable declaration, var is name of variable which consists of 'a' - 'z', 'A' - 'Z', '0' - '9' symbols
-	print var # Statement for outputting variables
-	printToDot # Statement for outputting regular expression to .dot file
+	print [var] # Statement for outputting variables
+	printToDot [var] # Statement for outputting regular expression to .dot file
 
 Examples:
 
