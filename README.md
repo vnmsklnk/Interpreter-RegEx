@@ -34,7 +34,7 @@ Three statements are supported:
 	print [var] # Statement for outputting variables
 	printToDot [var: RegExp] # Statement for outputting regular expressions to .dot file
 
-Examples:
+Example:
 
 	let [a] = (x|a)a
 	let [b] = a*
