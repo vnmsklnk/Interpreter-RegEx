@@ -30,7 +30,7 @@ Each regular expression is defined as variable which can be used in other expres
 
 Three statements are supported:
 
-	let [var] = expr # Variable declaration, var is name of variable which consists of 'a' - 'z', 'A' - 'Z', '0' - '9' symbols
+	let [var] = expr # Variable declaration; var = { 'a'..'z' | 'A'..'Z' | '0' - '9' }
 	print [var] # Statement for outputting variables
 	printToDot [var: RegExp] # Statement for outputting regular expressions to .dot file
 
