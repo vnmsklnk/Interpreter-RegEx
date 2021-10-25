@@ -33,7 +33,6 @@
         <Compile Include="Interpreter.fs" />
         <Compile Include="RegexpParser.fs" />
         <Compile Include="AstToDot.fs" />
-        <Content Include="data\regex_test.txt" />
     </ItemGroup>
 
 <!--    <ItemGroup>-->
