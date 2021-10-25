@@ -32,7 +32,7 @@ There are only three statements supported in this language:
 
 	let [var] = expr # Variable declaration, var is name of variable which consists of 'a' - 'z', 'A' - 'Z', '0' - '9' symbols
 	print [var] # Statement for outputting variables
-	printToDot [var] # Statement for outputting regular expression to .dot file
+	printToDot [var] # Statement for outputting regular expressions to .dot file
 
 Examples:
 
