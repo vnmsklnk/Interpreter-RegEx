@@ -60,7 +60,7 @@ Interpreter-RegEx
 ├── docs - documentation web-site
 ├── docsSrc - documentation files in .md format
 ├── src - code of the tool
-│   ├── Interpreter - interpreter of regular expressions
+│	├── Interpreter - interpreter of regular expressions
 |	├── Interpreter.Cli - command interface for Interpreter
 |	├── MatrixLib - library of matrix operations based on quadtrees
 |	└── Quadtrees - quadtrees library
