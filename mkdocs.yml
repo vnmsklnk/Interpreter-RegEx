@@ -1,3 +1,4 @@
 site_name: Interpreter RegEx
 theme:
   name: material
+  remote_name: docs
