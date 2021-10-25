@@ -4,4 +4,3 @@ theme:
 remote_name: docs
 docs_dir: docsSrc
 site_dir: docs
-edit_uri: edit/docs/docs/
