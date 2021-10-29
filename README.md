@@ -51,7 +51,7 @@ Example:
 
 Visit [docs](https://ivanmoskalenko.github.io/Interpreter-RegEx/) for full overview of tool.
 
-## Directory structure
+## Repository structure
 
 ```
 Interpreter-RegEx
