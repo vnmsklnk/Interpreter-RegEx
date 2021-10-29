@@ -1,17 +1,17 @@
-# Solution structure
+# Github repository structure
 
-This page contains some information about the project's structure
-
-## Github repository structure 
-
-	Arithm
-	├── .config - dotnet tools
-	├── .github - GitHub Actions CI setup 
-	├── docs - site with documentation
-	├── docsSrc - documentation files in .md format
-	├── src - main code of the project
-	│   └── Arithm - Interpreter, MyList and BigInt libraries
-	├── tests - tests
-	│   └── Arithm.tests - tests for all modules
-	├── fsharplint.json - linter config
-	└── Arithm.sln - main solution file
+    Interpreter-RegEx
+    ├── .config - dotnet tools
+    ├── .github - GitHub Actions setup 
+    ├── docs - documentation files in .md format
+    ├── src - code of the tool
+    │	├── Interpreter - interpreter of regular expressions
+    |	├── Interpreter.Cli - command interface for Interpreter
+    |	├── MatrixLib - library of matrix operations based on quadtrees
+    |	└── Quadtrees - quadtrees library
+    ├── tests - tests
+    |	├── Interpreter.UnitTests - tests for Interpreter
+    |	└── Quadtrees.UnitTests - tests for MatrixLib and Quadtrees
+    ├── fsharplint.json - linter config
+    ├── mkdocs.yml - MkDocs config
+    └── Interpreter.sln - solution file
