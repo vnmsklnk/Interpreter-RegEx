@@ -29,7 +29,7 @@ SparseMtx is a module with standard functions on matrices.
 
 SparseArray2D is a module with operations on matrices based on Array2D.
 
-* `getBounds (matrix: 'a [,])` - rerurns struct with dimensions of Array2D.
+* `getBounds (matrix: 'a [,])` - returns struct with dimensions of Array2D.
 * `genIntMatrix (rows: int, cols: int) (sparsity: float)` - generates matrix with sparsity specified.
 * `add (sr: Semiring<'a>) (matrix1: 'a [,]) (matrix2: 'a [,])` - adds two matrices.
 * `multiply (sr: Semiring<'a>) (matrix1: 'a [,]) (matrix2: 'a [,])`- multiplies two matrices.

@@ -94,9 +94,9 @@ Target.create "Test" (fun _ ->
     exec "dotnet"  @"run --project .\tests\Quadtrees.UnitTests\Quadtrees.UnitTests.fsproj" "."
 )
 
-Target.create "Docs" (fun _ ->
-    exec "dotnet"  @"fornax build" "docs"
-)
+// Target.create "Docs" (fun _ ->
+//     exec "dotnet"  @"fornax build" "docs"
+// )
 
 // --------------------------------------------------------------------------------------
 // Release Targets
@@ -198,7 +198,7 @@ Target.create "Release" DoNothing
 
 "Clean"
  ==> "BuildRelease"
- ==> "Docs"
+//  ==> "Docs"
 
 "Default"
   ==> "Pack"

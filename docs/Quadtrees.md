@@ -21,3 +21,5 @@ Basic operations for quadtrees.
 * `iter (action: 'a -> unit) (tree: Quadtree<'b,'a>)` - applies the given func to each element of tree.
 * `iteri (action: 'a -> -> 'a -> 'b -> unit) (tree: Quadtree<'a,'b>)` - applies the given func to each element of tree. The numbers passed to the function indicates the coordinates of element.
 * `sum (operators: ('a -> bool) * ('a -> 'a -> 'a)) (tree1: Quadtree<'c,'a>) (tree2: Quadtree<'c,'a>)` - point-wise sum of elements contained in two quadtrees.
+* `toSubregions (region: IRegion<_>)` - splits region into 4 subregions.
+* `subdivide (dir: Direction) (parentTree: Quadtree<_,_>)` - subdivides specified quadtree, if quadtree only consists of one leaf - leaf will be balanced and pushed to correct subregion. Returns subtree in specified direction; throws exception if minimum region reached.

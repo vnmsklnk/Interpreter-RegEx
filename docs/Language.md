@@ -9,13 +9,13 @@ Each arithmetic expression is defined as variable which can be used in other exp
 
 ## Statements
 
-There are three statements supported in this language: 
+There are three types of statements supported in this language: 
 
 *	`print [<vname>]`
 *	`let [<vname>] = <expression>`
 *   `printToDot [<vname>: RegExp] <string>`
 
-`print` prints the regular expression corresponding to a given variable, `let` defines a variable and `printToDot` outputs regular expression in .dot format.
+`print` prints the regular expression corresponding to the given variable, `let` defines a variable and `printToDot` outputs regular expression in .dot format.
 
 * `<vname>` starts with a Latin character, which can be followed by numbers or other letters.
 * `<expression>` consists of Latin letters, digits, characters `'-' '.' '/' '+' '~' ';'` and other variables. As operators characters `'(' ')' '*' '|' '?' '&'` can be used.
@@ -30,7 +30,7 @@ There are three statements supported in this language:
 *    `Star of <Regex>`
 *    `Intersect of <Regex * Regex>`
 
-Existing of `RVar` means that variables can be used in regular expressions.
+`RVar` case allows variables to be used inside regular expressions.
 
 ## Expressions
 
@@ -38,7 +38,9 @@ Existing of `RVar` means that variables can be used in regular expressions.
 *    `FindAll of <string * Regex>`
 *    `IsAcceptable of <string * Regex>`
 
-`FindAll` searches for all substrings satisfying the specified regular expression, `IsAcceptable` checks whether the string belongs to the specified expression.
+`FindAll` searches for all substrings satisfying the specified regular expression,
+
+`IsAcceptable` checks whether the string belongs to the specified expression.
 
 ## Operators
 
