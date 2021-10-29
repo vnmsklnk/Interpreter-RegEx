@@ -32,7 +32,7 @@ Three statements are supported:
 
 	let [var] = expr # Variable declaration; var = { 'a'..'z' | 'A'..'Z' | '0' - '9' }
 	print [var] # Statement for outputting variables
-	printToDot [var: RegExp] # Statement for outputting regular expressions to .dot file
+	printToDot [var: RegExp] <string> # Statement for outputting regular expressions to .dot file
 
 Example:
 
@@ -49,7 +49,7 @@ Example:
 
 ## Documents
 
-Visit [docs](https://www.youtube.com/watch?v=dQw4w9WgXcQ) for full overview of tool.
+Visit [docs](ivanmoskalenko.github.io/interpreter-regex/) for full overview of tool.
 
 ## Directory structure
 
@@ -57,8 +57,7 @@ Visit [docs](https://www.youtube.com/watch?v=dQw4w9WgXcQ) for full overview of t
 Interpreter-RegEx
 ├── .config - dotnet tools
 ├── .github - GitHub Actions setup 
-├── docs - documentation web-site
-├── docsSrc - documentation files in .md format
+├── docs - documentation files in .md format
 ├── src - code of the tool
 │	├── Interpreter - interpreter of regular expressions
 |	├── Interpreter.Cli - command interface for Interpreter
@@ -68,6 +67,7 @@ Interpreter-RegEx
 |	├── Interpreter.UnitTests - tests for Interpreter
 |	└── Quadtrees.UnitTests - tests for MatrixLib and Quadtrees
 ├── fsharplint.json - linter config
+├── mkdocs.yml - MkDocs config
 └── Interpreter.sln - solution file
 ```
 	

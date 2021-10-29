@@ -11,7 +11,7 @@ Each arithmetic expression is defined as variable which can be used in other exp
 
 There are three statements supported in this language: 
 
-*	`print <vname>`
+*	`print [<vname>]`
 *	`let [<vname>] = <expression>`
 *   `printToDot [<vname>: RegExp] <string>`
 
@@ -42,7 +42,7 @@ Existing of `RVar` means that variables can be used in regular expressions.
 
 ## Operators
 
-Available operators in Interpreter-RegEx with:
+Available operators in Interpreter-RegEx:
 
 * `*` - Kleene star
 * `|` - alternation
