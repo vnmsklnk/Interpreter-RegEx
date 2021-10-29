@@ -49,7 +49,7 @@ Example:
 
 ## Documents
 
-Visit [docs](ivanmoskalenko.github.io/interpreter-regex/) for full overview of tool.
+Visit [docs](https://ivanmoskalenko.github.io/Interpreter-RegEx/) for full overview of tool.
 
 ## Directory structure
 
