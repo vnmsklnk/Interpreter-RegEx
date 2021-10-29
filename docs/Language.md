@@ -1,5 +1,1 @@
----
-hide:
-  - navigation
----
 # Language guide

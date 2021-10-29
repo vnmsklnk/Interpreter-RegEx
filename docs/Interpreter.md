@@ -1,7 +1,3 @@
----
-hide:
-  - navigation
----
 # Interpreter
 ## Developers
 
@@ -17,7 +13,7 @@ You can also get a dot file which contains a syntax tree by using `DrawTree.draw
 * `processStmt (vDict:Dictionary<AST.VName,AST.Expression>) (pDict:Dictionary<string,string>) (stmt:AST.Stmt)` - gets an expression from a statement and sets it's value to a dictionaries with variable as a key
 * `calculate (ast:AST.Stmt list)` - assisting function to compute a result of code with a single statement
 
-### Example:
+### Example
 #
 	let x = "let x = 5 print x"
 	let ast = parse x
