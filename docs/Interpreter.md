@@ -18,8 +18,8 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
     let [a] = (x|a)a
 	let [b] = a*
 
-	let [c] = isAcceptable "a" [a]&[b]
-	let [d] = isAcceptable "1" (1*)&(1?)
+	let [c] = isAcceptable \"a\" [a]&[b]
+	let [d] = isAcceptable \"1\" (1*)&(1?)
 	let [e] = findAll "byx" a|y
 
 	print [c]
@@ -32,8 +32,8 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
     ```
 
 Given code prints
-    ```False 
-    True 
+    ```False\n 
+    True\n 
     [(1, 2)]```
 into console.
 
