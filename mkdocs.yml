@@ -5,8 +5,5 @@ theme:
     - navigation.tabs
     - toc.integrate
 markdown_extensions:
-  - codehilite
   - pymdownx.highlight
-  - pymdownx.inlinehilite
   - pymdownx.superfences
-  - pymdownx.snippets
