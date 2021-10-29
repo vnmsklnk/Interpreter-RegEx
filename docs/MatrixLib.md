@@ -14,13 +14,13 @@ Matrix Algebra is a module with algebraic operations on matrices.
 
 ## SparseMtx
 
-SparseMtx is a module with standard function on matrices.
+SparseMtx is a module with standard functions on matrices.
 
 * `init (size: int) (operators: Operators<'a>) (initializer: int -> int -> 'a)` - creates new matrix with initializer given.
 * `iteri (iterator: int -> int -> 'a -> unit) (matrix: SparseMtx<_>)` - applies the given func to each element of matrix. The integers passed to the function indicates the coordinates of element.
-* `iter (iterator: 'a -> unit) (matrix: SparseMtx<_>)` - applies the given func to each element of matrix. The integers passed to the function indicates the coordinates of element.
+* `iter (iterator: 'a -> unit) (matrix: SparseMtx<_>)` - applies the given func to each element of matrix.
 * `mapi (outerTypeOps: Operators<'b>) (mapping: int -> int -> 'a -> 'b) (matrix: SparseMtx<'a>)` - builds a new matrix whose elements are the results of applying the given function to each of the elements of the matrix. The integers passed to the function indicates the coordinates of element being transformed.
-* `map (outerTypeOps: Operators<'b>) (mapping: 'a -> 'b) (matrix: SparseMtx<'a>)` - builds a new matrix whose elements are the results of applying the given function to each of the elements of the matrix. The integers passed to the function indicates the coordinates of element being transformed.
+* `map (outerTypeOps: Operators<'b>) (mapping: 'a -> 'b) (matrix: SparseMtx<'a>)` - builds a new matrix whose elements are the results of applying the given function to each of the elements of the matrix.
 * `toArray2D (matrix: SparseMtx<_>)` - transforms matrix to Array2D.
 * `doubleSize (matrix: SparseMtx<_>)` - returns matrix of 2X size.
 * `isEqual (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - equality of two matrices.
