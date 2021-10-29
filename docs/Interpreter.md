@@ -13,23 +13,23 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
 
 ### Example
 
-    ``` f#
-    let program = "
-    let [a] = (x|a)a
-	let [b] = a*
+``` f#
+let program = "
+let [a] = (x|a)a
+let [b] = a*
 
-	let [c] = isAcceptable \"a\" [a]&[b]
-	let [d] = isAcceptable \"1\" (1*)&(1?)
-	let [e] = findAll "byx" a|y
+let [c] = isAcceptable \"a\" [a]&[b]
+let [d] = isAcceptable \"1\" (1*)&(1?)
+let [e] = findAll "byx" a|y
 
-	print [c]
-	print [d]
-	print [e]"
+print [c]
+print [d]
+print [e]"
 
-	let ast = Interprter.parseProgramToAST program
-	let _, pDict = Interpreter.run ast
-	printfn "%A" pDict.["print"]
-    ```
+let ast = Interprter.parseProgramToAST program
+let _, pDict = Interpreter.run ast
+printfn "%A" pDict.["print"]
+```
 
 Given code prints
     ```
