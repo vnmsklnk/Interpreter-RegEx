@@ -32,8 +32,10 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
     ```
 
 Given code prints
-    ```False  
+    ```False
+
     True
+    
     [(1, 2)]```
 into console.
 
