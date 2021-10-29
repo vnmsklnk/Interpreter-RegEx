@@ -1,34 +1,47 @@
 # Interpreter
 ## Developers
 
-To interpretate your code, at first you need to create an abstract sytax tree by using the following function
-`Main.parse <string>`
+To interpretate your code, at first you need to create an abstract sytax tree by using `Interprter.parseProgramToAST <string>`
 
-Then you can run the `Interpreter.run <ast>` funtion that returns three dictionaries. The first contains values of all variables in `AST.Expression` format,the second contains variables in `string` format, the third has only one key - `"print"` with string of result of interpretation.
-You can also get a dot file which contains a syntax tree by using `DrawTree.drawTree <ast> <output file path>`
+Then you can run the `Interpreter.run <AST>` function that returns two dictionaries. The first contains values of all variables in `Interpreter.VType` format, the second has only one key - `"print"` with interpretation result in `string` format.
+You can also get a dot file which contains an abstract syntax tree by using `AstToDot.astToDot <output file path> <AST>`
 
 ### Another functions
 
-* `processExpr (vDict:Dictionary<AST.VName,AST.Expression>) (expr:AST.Expression)` - return a result of a given expression in `BigInt` format
-* `processStmt (vDict:Dictionary<AST.VName,AST.Expression>) (pDict:Dictionary<string,string>) (stmt:AST.Stmt)` - gets an expression from a statement and sets it's value to a dictionaries with variable as a key
-* `calculate (ast:AST.Stmt list)` - assisting function to compute a result of code with a single statement
+* `processExpression (vDict: Dictionary<AST.VName, VType>) (expression: AST.Expr)` - return a result of a given expression in `VType` format.
+* `processStmt (vDict: Dictionary<AST.VName, VType>) (pDict: Dictionary<string, string>) (stmt: AST.Stmt)` - gets an expression from a statement and sets it's value to a dictionaries with variable as a key.
 
 ### Example
 
-	let x = "let x = 5 print x"
-	let ast = parse x
-	let _, _, pDict = Interpreter.run ast
-	printfn "%s" pDict.["print"]
+    let program = "
+    let [a] = (x|a)a
+	let [b] = a*
 
-Given code prints "5" into console
+	let [c] = isAcceptable "a" [a]&[b]
+	let [d] = isAcceptable "1" (1*)&(1?)
+	let [e] = findAll "byx" a|y
+
+	print [c]
+	print [d]
+	print [e]"
+
+	let ast = Interprter.parseProgramToAST program
+	let _, pDict = Interpreter.run ast
+	printfn "%A" pDict.["print"]
+
+Given code prints 
+    False 
+    True 
+    [(1, 2)]
+into console.
 
 ## Users
 
-There are only four console commands in Arithm
+There are four console commands in Interpreter-RegEx.
 
-* `--inputfile <file path>` - enter a file with code
-* `--inputstring <string>` - enter a string with code
-* `--compute` - return the result of interpretation of the code
-* `--todot <file path>` - return dot code of syntax tree to the given file
+* `--inputfile <file path>` - the path to the file with code.
+* `--inputstring <string>` - the string with code.
+* `--compute` - returns the result of interpretation of the code
+* `--todot <file path>` - saves .dot file with abstract syntax tree to the path specified.
 	
-Just run "Arithm.exe" from console with given commands
+Just run "Interpreter-RegEx.exe" from console with given commands.
