@@ -1,3 +1,7 @@
+---
+hide:
+  - navigation
+---
 # Github repository structure
 
     Interpreter-RegEx
