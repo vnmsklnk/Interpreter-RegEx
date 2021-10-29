@@ -34,7 +34,7 @@ let main (argv: string array) =
         let ast = parseProgramToAST input
         if p.Contains(Compute)
             then
-                let _, _, pD = run ast
+                let _, pD = run ast
                 printfn "%s" pD.["print"]
         if p.Contains(ToDot)
         then ast |> astToDot (results.GetResult ToDot)  

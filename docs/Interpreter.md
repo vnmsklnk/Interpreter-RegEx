@@ -13,6 +13,7 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
 
 ### Example
 
+    ``` f#
     let program = "
     let [a] = (x|a)a
 	let [b] = a*
@@ -28,11 +29,12 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
 	let ast = Interprter.parseProgramToAST program
 	let _, pDict = Interpreter.run ast
 	printfn "%A" pDict.["print"]
+    ```
 
-Given code prints 
-    False 
+Given code prints
+    ```False 
     True 
-    [(1, 2)]
+    [(1, 2)]```
 into console.
 
 ## Users
