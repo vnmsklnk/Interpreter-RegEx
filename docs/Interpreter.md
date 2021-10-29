@@ -13,7 +13,7 @@ You can also get a dot file which contains an abstract syntax tree by using `Ast
 
 ### Example
 
-    ``` f#
+    ``` python
     let program = "
     let [a] = (x|a)a
 	let [b] = a*
