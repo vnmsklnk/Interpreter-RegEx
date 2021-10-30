@@ -1,8 +1,7 @@
 namespace MatrixLib
-
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT
-open MatrixLib.SparseMtx
+// fsharplint:disable camelCase
     
 module MatrixAlgebra =
     let sum (sr: Semiring<_>) (mtx1: SparseMtx<_>) (mtx2: SparseMtx<_>) = 

@@ -113,7 +113,8 @@ module SparseMtx =
 
     let iter iterator (matrix: SparseMtx<_>) =
         MutableQT.iter iterator matrix.tree
-
+    
+    // fsharplint:disable camelCase
     let map (outerTypeOps: Operators<'b>) mapping (mtx: SparseMtx<'a>) =
         let rec loop (qt: Quadtree<_,_>) =
             match qt.Content with

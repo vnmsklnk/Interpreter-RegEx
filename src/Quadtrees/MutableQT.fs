@@ -212,7 +212,8 @@ module MutableQT =
             iteri action ne
             iteri action sw
             iteri action se
-
+    
+    // fsharplint:disable camelCase
     /// Point-wise sum of elements contained in two quadtrees
     let rec sum operators (treeA: Quadtree<'c,_>) (treeB: Quadtree<'c,_>) =
         let equalToZero, addition = operators

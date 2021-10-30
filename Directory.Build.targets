@@ -3,7 +3,7 @@
             <Exec
                 Command="dotnet fsharplint -f msbuild lint --lint-config $(MSBuildThisFileDirectory)/fsharplint.json $(MSBuildProjectFullPath)"
                 ConsoleToMsBuild="true"
-                IgnoreExitCode="true"
+                IgnoreExitCode="false"
             />
     </Target>
 </Project>
