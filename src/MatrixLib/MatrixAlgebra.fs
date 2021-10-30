@@ -1,4 +1,4 @@
-module MatrixLib.MatrixAlgebra
+namespace MatrixLib
 
 open Quadtrees.QtTypes.MatrixCell
 open Quadtrees.MutableQT

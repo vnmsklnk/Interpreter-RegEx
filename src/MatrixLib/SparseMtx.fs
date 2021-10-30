@@ -1,4 +1,4 @@
-﻿module MatrixLib.SparseMtx
+﻿namespace MatrixLib
 
 open Quadtrees.Utils
 open Quadtrees.QtTypes.MatrixCell
