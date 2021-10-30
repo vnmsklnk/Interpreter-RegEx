@@ -4,12 +4,11 @@ Interpreter-RegEx uses simple programming language to define regular expressions
 
 ## Grammar
 
-Code consists of statements with expressions and variable's names associated with them.
-Each arithmetic expression is defined as variable which can be used in other expressions. Value of a variable can be printed in console.
+Each regular expression is defined as variable which can be used in other expressions. Typical program consists of statements with expressions and variables' names associated with them.
 
 ## Statements
 
-There are three types of statements supported in this language: 
+There are three types of statements supported in the language: 
 
 *	`print [<vname>]`
 *	`let [<vname>] = <expression>`
