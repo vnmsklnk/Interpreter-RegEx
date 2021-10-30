@@ -2,6 +2,24 @@
 
 Quadtrees is a library of operations on quadtrees which is used in Matrix Library.
 
+## Type Quadtree
+
+Generic implementation of Point-Region Quadtree Data Structure where: 
+- Region is an abstraction (immutable) of two-dimensional space;
+    Region may have integer, float or custom coordinates;
+    (implements `IRegion< 'coordinateType >` interface)
+- Content represents quad node data which could be:
+    * Emtpy (no data inside);
+    * Leaf (coordinates point (point in 2D space) associated with value of type 'a);
+    * Nodes (sub-nodes inside the quadtree);
+  _ _ _
+  Content of quadtree is mutable and could be changed explicitly or by inserting new values
+
+### Fields
+
+* `Region: IRegion<'c>` - abstraction (immutable) of two-dimensional space.
+* `Content: QuadNode<'c, 't>` - represents quad node data, which could be Empty, Leaf or Nodes.
+
 ## QuadtreeUtils
 
 QuadtreeUtils is a module with useful utilities for working with quadtrees.

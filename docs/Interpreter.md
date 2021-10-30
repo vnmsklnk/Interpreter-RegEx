@@ -47,5 +47,3 @@ There are four console commands in Interpreter-RegEx.
 * `--inputstring <string>` - the string with code.
 * `--compute` - returns the result of interpretation of the code
 * `--todot <file path>` - saves .dot file with abstract syntax tree to the path specified.
-	
-Just run "Interpreter-RegEx.exe" from console with given commands.

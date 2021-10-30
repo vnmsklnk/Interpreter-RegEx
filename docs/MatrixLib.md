@@ -2,17 +2,28 @@
 
 MatrixLib is a quadtrees based library for working with matrices.
 
+## Type SparseMtx
+
+Square sparse matrix implemented on quadtrees using square regions (matrix cells).
+The size of this matrix is always a power of two, if it is not, it will be rounded to next nearest power of two.
+Additional matrix cells are considered zero values.
+
+### Fields
+* `val size: int` - size of the matrix.
+* `val ops: Operators<'a>` - basic operators (getZero, equality).
+* `val tree: Quadtree<int, 'a>` - Quadtree used as storage for matrix values. 
+
 ## Matrix Algebra
 
 Matrix Algebra is a module with algebraic operations on matrices.
 
-*	`sum (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - adds two matrices.
-*	`multiply (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)`- multiplies two matrices.
-*	`multiplyParallel (semiring: Semiring<_>) (depth: int) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - multiplies two matrices concurrently. Number of threads = 4^depth.
-*	`kroneckerProduct (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - calculates Kronecker product of two matrices.
-*	`closure (semiring: Semiring<_>) (matrix: SparseMtx<_>)` - transitive closure of two matrices.
+* `sum (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - adds two matrices.
+* `multiply (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)`- multiplies two matrices.
+* `multiplyParallel (semiring: Semiring<_>) (depth: int) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - multiplies two matrices concurrently. Number of threads = 4^depth.
+* `kroneckerProduct (semiring: Semiring<_>) (matrix1: SparseMtx<_>) (matrix2: SparseMtx<_>)` - calculates Kronecker product of two matrices.
+* `closure (semiring: Semiring<_>) (matrix: SparseMtx<_>)` - transitive closure of two matrices.
 
-## SparseMtx
+## SparseMtx functions
 
 SparseMtx is a module with standard functions on matrices.
 
