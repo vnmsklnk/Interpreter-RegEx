@@ -1,10 +1,8 @@
 module Quadtrees.UnitTests.MainTests
 
 open Expecto // Test Framework
-open MatrixLib // Semirings and operators
-open MatrixLib.SparseArray2D // Array2D functions for comparison
-open MatrixLib.SparseMtx // Sparse matrix functions
-open MatrixLib.MatrixAlgebra
+open MatrixLib
+
 
 let intSemiring = Semirings.intSR
 let intOps = Operators.intOps

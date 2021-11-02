@@ -1,4 +1,4 @@
-module MatrixLib.SparseArray2D
+namespace MatrixLib
 
 open System
 open System.Threading.Tasks

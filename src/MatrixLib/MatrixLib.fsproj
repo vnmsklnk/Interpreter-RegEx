@@ -2,6 +2,10 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <PackageId>Matrix-Library</PackageId>
+        <Version>0.1.1</Version>
+        <RepositoryType>git</RepositoryType>
+        <RepositoryUrl>https://github.com/IvanMoskalenko/Interpreter-RegEx/</RepositoryUrl>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
     </PropertyGroup>
 
@@ -15,9 +19,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Quadtrees\Quadtrees.fsproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <PackageReference Include="System.Runtime.Numerics" Version="4.3.0" />
-    </ItemGroup>
+    
     <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

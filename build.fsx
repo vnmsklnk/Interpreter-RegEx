@@ -19,13 +19,13 @@ open Fake.Api
 
 let project = "Interpreter"
 
-let summary = "TODO: Add Summary"
-let authors = "TODO: Add Authors"
-let tags = "TODO: Add package tags"
-let copyright = "TODO: Add copyright"
+let summary = "Interpreter of regular expressions."
+let authors = "Ivan Moskalenko, m0rphed"
+let tags = "pre-release"
+let copyright = "© gsvgit, Ivan Moskalenko, m0rphed"
 
-let gitOwner = "TODO: ADD_AUTHOR"
-let gitName = "Interpreter"
+let gitOwner = "IvanMoskalenko"
+let gitName = "Interpreter-RegEx"
 let gitHome = "https://github.com/" + gitOwner
 let gitUrl = gitHome + "/" + gitName
 
@@ -94,9 +94,9 @@ Target.create "Test" (fun _ ->
     exec "dotnet"  @"run --project .\tests\Quadtrees.UnitTests\Quadtrees.UnitTests.fsproj" "."
 )
 
-Target.create "Docs" (fun _ ->
-    exec "dotnet"  @"fornax build" "docs"
-)
+// Target.create "Docs" (fun _ ->
+//     exec "dotnet"  @"fornax build" "docs"
+// )
 
 // --------------------------------------------------------------------------------------
 // Release Targets
@@ -198,7 +198,8 @@ Target.create "Release" DoNothing
 
 "Clean"
  ==> "BuildRelease"
- ==> "Docs"
+//  ==> "Docs"
+
 
 "Default"
   ==> "Pack"

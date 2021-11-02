@@ -1,0 +1,9 @@
+site_name: Interpreter RegEx
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - toc.integrate
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences

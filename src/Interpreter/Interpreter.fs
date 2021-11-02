@@ -115,7 +115,7 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
                     |> regexToNFA
                 toDot mtxNFA fullPath
                 Ok $"printToDot: written to {fullPath}"
-            | _ as other -> Error $"Error: 'printToDot' 1 arg. should be a var with regex; instead got: %A{other}"
+            | other -> Error $"Error: 'printToDot' 1 arg. should be a var with regex; instead got: %A{other}"
         
         match (processVar vDict.[var] path) with
         | Ok msg -> printfn $"%A{msg}" 
@@ -129,13 +129,12 @@ let processStmt (vDict: Dictionary<_, _>) (pDict: Dictionary<string, string>) st
 let run statements =
     let vDict = Dictionary<_, _>()
     let pDict = Dictionary<_, _>()
-    let varDict = Dictionary<_, _>()
     pDict.Add(printConst, "")
 
     let vD, _pD =
         List.fold (fun (d1, d2) -> processStmt d1 d2) (vDict, pDict) statements
 
-    vD, varDict, pDict
+    vD, pDict
 
 let parseProgramToAST progText =
     let lexBuffer = LexBuffer<char>.FromString progText
